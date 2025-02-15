@@ -1,0 +1,41 @@
+{
+  "name": "alumniticket",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@auth/prisma-adapter": "^2.7.4",
+    "@emotion/cache": "^11.14.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@fontsource/roboto": "^5.1.1",
+    "@mui/icons-material": "^6.4.1",
+    "@mui/material": "^6.4.1",
+    "@mui/material-nextjs": "^6.4.2",
+    "@mui/styled-engine-sc": "^6.4.0",
+    "@prisma/client": "^6.3.1",
+    "@prisma/extension-pulse": "^1.2.0",
+    "bcrypt": "^5.1.1",
+    "formidable": "^3.5.2",
+    "js-cookie": "^3.0.5",
+    "mysql2": "^3.12.0",
+    "next": "15.1.6",
+    "next-auth": "^4.24.11",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "styled-components": "^6.1.14",
+    "swr": "^2.3.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@types/node": "22.10.10",
+    "eslint": "^9",
+    "eslint-config-next": "15.1.6",
+    "prisma": "^6.3.1"
+  }
+}

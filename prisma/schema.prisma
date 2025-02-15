@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model store {
+  store_id   Int      @id @default(autoincrement())
+  store_name String   @db.VarChar(100)
+  location   String   @db.VarChar(100)
+  address    String   @db.VarChar(255)
+  ticket     ticket[]
+}
+
+model ticket {
+  coupon_id         Int             @id @default(autoincrement())
+  store_id          Int
+  name_coupon       String          @db.VarChar(100)
+  start_Date        DateTime        @db.Date
+  end_Date          DateTime        @db.Date
+  type              String          @db.VarChar(50)
+  number_of_coupons Int
+  details           String          @db.VarChar(255)
+  saved_coupons     saved_coupons[]
+  store             store           @relation(fields: [store_id], references: [store_id], onDelete: Cascade, onUpdate: Restrict, map: "ticket_ibfk_1")
+
+  @@index([store_id], map: "store_id")
+}
+
+model saved_coupons {
+  id        Int      @id @default(autoincrement())
+  user_id   Int
+  coupon_id Int
+  saved_at  DateTime @default(now()) @db.Timestamp(0)
+  users     users    @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "saved_coupons_ibfk_1")
+  ticket    ticket   @relation(fields: [coupon_id], references: [coupon_id], onUpdate: Restrict, map: "saved_coupons_ibfk_2")
+
+  @@index([coupon_id], map: "coupon_id")
+  @@index([user_id], map: "user_id")
+}
+
+model users {
+  id            Int             @id @default(autoincrement())
+  name          String          @db.VarChar(255)
+  email         String          @unique(map: "email") @db.VarChar(255)
+  password      String          @db.VarChar(255)
+  role          String          @default("member") // Add a role field
+  saved_coupons saved_coupons[]
+}
