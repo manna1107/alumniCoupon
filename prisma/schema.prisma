@@ -23,7 +23,7 @@ model ticket {
   end_Date          DateTime        @db.Date
   type              String          @db.VarChar(50)
   number_of_coupons Int
-  details           String          @db.VarChar(255)
+  details           String          @db.VarChar(255)        
   saved_coupons     saved_coupons[]
   store             store           @relation(fields: [store_id], references: [store_id], onDelete: Cascade, onUpdate: Restrict, map: "ticket_ibfk_1")
 
@@ -31,7 +31,7 @@ model ticket {
 }
 
 model saved_coupons {
-  id        Int      @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())c
   user_id   Int
   coupon_id Int
   saved_at  DateTime @default(now()) @db.Timestamp(0)
@@ -47,6 +47,6 @@ model users {
   name          String          @db.VarChar(255)
   email         String          @unique(map: "email") @db.VarChar(255)
   password      String          @db.VarChar(255)
-  role          String          @default("member") // Add a role field
+  role          String          @default("user") // Add a role field
   saved_coupons saved_coupons[]
 }

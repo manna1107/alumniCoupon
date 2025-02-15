@@ -4,8 +4,8 @@ import Store from "../../../services/Store";
 
 export default async function Formpage() {
 
-    // const response = await Coupon.getAll();
-    // const responseStore = await Store.getAll();
+     const response = await Coupon.getAll();
+     const responseStore = await Store.getAll();
 
     return (
         <div>

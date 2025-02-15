@@ -36,11 +36,21 @@ function ResponsiveAppBar() {
   const handleCloseUserMenu = () => setAnchorElUser(null);
 
   const handleUserMenuClick = (setting) => {
-    if (setting === 'Profile') router.push('/profile');
-    else if (setting === 'Account') router.push('/account');
-    else if (setting === 'Logout') router.push('/'); // ✅ ใช้ signOut() เพื่อ logout
-    handleCloseUserMenu();
-  };
+      switch (setting) {
+        case 'Profile':
+          router.push('/profile');
+          break;
+        case 'Account':
+          router.push('/account');
+          break;
+        case 'Logout':
+          signOut({ callbackUrl: '/' }); // ✅ ใช้ `signOut()` ของ NextAuth
+          break;
+        default:
+          break;
+      }
+      handleCloseUserMenu();
+    };
 
   return (
     <AppBar position="fixed" sx={{ left: 0, right: 0, boxShadow: 0 }}>

@@ -37,7 +37,7 @@ function ResponsiveAppBar() {
         router.push('/account');
         break;
       case 'Logout':
-        signOut(); // ✅ ใช้ `signOut()` ของ NextAuth
+        signOut({ callbackUrl: '/' }); // ✅ ใช้ `signOut()` ของ NextAuth
         break;
       default:
         break;

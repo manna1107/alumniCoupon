@@ -1,172 +1,171 @@
 "use client";
 
-import { useState } from "react";
+import { useState ,useEffect} from "react";
 import { useRouter } from "next/navigation";
-import { Box, Container, TextField, Button, Grid, Typography } from "@mui/material";
+import { Box, Container, TextField, Button, Grid, Typography, Card, CardMedia, CardContent } from "@mui/material";
 import Header from "../../header2";
+import Coupon from '../../../../services/api/coupon';
+import Store from '../../../../services/api/store';
+
 
 export default function CouponForm() {
     const router = useRouter();
 
     const [formData, setFormData] = useState({
         name_coupon: "",
-        store_name: "",
-        location: "",
-        address: "",
-        //start_Date: "",
-        //nd_Date: "",
+        store_id : 0,
+        start_Date: "",
+        end_Date: "",
         type: "",
         number_of_coupons: 0,
-        details: "",
+        details: "" ,     
     });
 
-    // ฟังก์ชันอัปเดตค่าฟอร์ม
+  
+    const [image, setImage] = useState(null);
+    const [previewImage, setPreviewImage] = useState(null);
+     
+    // อัปเดตค่าฟอร์ม
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: name === "number_of_coupons" ? Number(value) : value // แปลงค่า number_of_coupons เป็นตัวเลข
-        });
-    };
+    
+        if (name === "store_id")
+        {
+            setFormData({
+                ...formData,
+                [name]: value ? Number(value) : null,  
+            });
+        }
+        else if (name === "number_of_coupons"){
+            setFormData({
+                ...formData,
+                [name]: value ? Number(value) : null,  
+            });
+        }
+        else if (name === 'start_Date' || name === 'end_Date') {
+            const selectedDate = new Date(value);  
+            const currentDate = new Date();        
+            selectedDate.setHours(currentDate.getHours(), currentDate.getMinutes(), 0, 0); 
 
-    // ฟังก์ชันบันทึกข้อมูล (เพิ่มใหม่)
+            setFormData({
+                ...formData,
+                [name]: selectedDate.toISOString(), 
+            });
+        } else {
+            setFormData({
+                ...formData,
+                [name]: value,
+            });
+        }
+    
+        console.log("from now " ,formData);
+    };
+    
+      
+
+    // จัดการไฟล์รูปภาพ
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setImage(file);
+            setPreviewImage(URL.createObjectURL(file));
+        }
+    };
+        
+    // บันทึกข้อมูล
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
-        console.log("Submitting Data:", formData); // ตรวจสอบค่าก่อนส่ง
+
         
         try {
-            const response = await fetch(`/api/coupon`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData),
-            });
-
-            if (response.ok) {
-                alert("เพิ่มข้อมูลคูปองสำเร็จ!");
+            await Coupon.create({data:formData})
                 router.push("/admin/home");
-            } else {
-                const errorData = await response.json();
-                alert("เกิดข้อผิดพลาด: " + errorData.message);
-            }
+        
         } catch (error) {
             console.error("Error submitting data:", error);
             alert("เกิดข้อผิดพลาดในการเชื่อมต่อ API");
         }
+        console.log(formData)
     };
+
+    console.log(Date)
 
     return (
         <div>
             <Header />
-            <Box>
-                <Container sx={{ mt: 16, backgroundColor: "#f5f5f5", padding: 4, borderRadius: 2 }}>
-                    <Typography variant="h5" align="center" sx={{ mb: 3, fontWeight: "bold" }}>
-                        เพิ่มคูปอง
-                    </Typography>
-                    <form onSubmit={handleSubmit}>
-                        <Grid container spacing={3}>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    fullWidth
-                                    label="ชื่อคูปอง"
-                                    name="name_coupon"
-                                    value={formData.name_coupon}
-                                    onChange={handleChange}
-                                    sx={{ mb: 2 }}
-                                    required
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 8 }}>
+                <Container maxWidth="md">
+                    <Card sx={{ p: 3, backgroundColor: "#ffffff", boxShadow: 3 }}>
+                        <CardContent>
+                            {/* 🔹 ข้อความ "เพิ่มคูปอง" แสดงก่อน */}
+                            <Typography variant="h5" align="center" sx={{ fontWeight: "bold", mb: 2 }}>
+                                เพิ่มคูปอง
+                            </Typography>
+
+                            {/* 🔹 แสดงรูปถ้ามีอัปโหลด */}
+                            {previewImage && (
+                                <CardMedia
+                                    component="img"
+                                    image={previewImage}
+                                    alt="Coupon Preview"
+                                    sx={{
+                                        maxWidth: "200px",  // จำกัดความกว้างของรูปภาพ 
+                                        height: "120",  // ให้ปรับสูงอัตโนมัติตามสัดส่วน
+                                        borderRadius: 2, 
+                                        objectFit: "contain", 
+                                        display: "block", 
+                                        margin: "0 auto", // จัดให้อยู่กึ่งกลาง
+                                        mb: 2 
+                                    }}
                                 />
-                                <TextField
-                                    fullWidth
-                                    label="ชื่อร้าน/กิจการ"
-                                    name="store_name"
-                                    value={formData.store_name}
-                                    onChange={handleChange}
-                                    sx={{ mb: 2 }}
-                                    required
-                                />
-                                <TextField
-                                    fullWidth
-                                    label="จังหวัด"
-                                    name="location"
-                                    value={formData.location}
-                                    onChange={handleChange}
-                                    sx={{ mb: 2 }}
-                                    required
-                                />
-                                <TextField
-                                    fullWidth
-                                    label="ที่อยู่"
-                                    name="address"
-                                    value={formData.address}
-                                    onChange={handleChange}
-                                    sx={{ mb: 2 }}
-                                    required
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    fullWidth
-                                    type="date"
-                                    label="ระยะเวลาการใช้คูปอง (จาก)"
-                                    name="start_Date"
-                                    value={formData.start_Date}
-                                    onChange={handleChange}
-                                    sx={{ mb: 2 }}
-                                    InputLabelProps={{ shrink: true }}
-                                
-                                />
-                                <TextField
-                                    fullWidth
-                                    type="date"
-                                    label="ถึง"
-                                    name="end_Date"
-                                    value={formData.end_Date}
-                                    onChange={handleChange}
-                                    sx={{ mb: 2 }}
-                                    InputLabelProps={{ shrink: true }}
-                                    
-                                />
-                                <TextField
-                                    fullWidth
-                                    label="ประเภทคูปอง"
-                                    name="type"
-                                    value={formData.type}
-                                    onChange={handleChange}
-                                    sx={{ mb: 2 }}
-                                    required
-                                />
-                                <TextField
-                                    fullWidth
-                                    label="จำนวนคูปอง"
-                                    type="number"
-                                    name="number_of_coupons"
-                                    value={formData.number_of_coupons}
-                                    onChange={handleChange}
-                                    sx={{ mb: 2 }}
-                                    required
-                                    InputProps={{ inputProps: { min: 1 } }} // กำหนดค่าไม่ให้เป็นค่าลบ
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    fullWidth
-                                    label="เงื่อนไขการใช้งาน"
-                                    name="details"
-                                    value={formData.details}
-                                    onChange={handleChange}
-                                    multiline
-                                    rows={4}
-                                    sx={{ mb: 2 }}
-                                    required
-                                />
-                            </Grid>
-                        </Grid>
-                        <Grid item xs={12} sx={{ textAlign: "right" }}>
-                            <Button type="submit" variant="contained" color="success" size="large">
-                                บันทึก
-                            </Button>
-                        </Grid>
-                    </form>
+                            )}
+                            <form onSubmit={handleSubmit} encType="multipart/form-data">
+                                <Grid container spacing={2}>
+                                    {/* อัปโหลดรูปภาพ */}
+                                    <Grid item xs={12}>
+                                        <Typography variant="subtitle1">อัปโหลดรูปภาพคูปอง:</Typography>
+                                        <input type="file" accept="image/*" onChange={handleImageChange}  />
+                                    </Grid>
+                                    {/* ส่วนข้อมูลฟอร์ม */}
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField fullWidth label="ชื่อคูปอง" name="name_coupon" value={formData.name_coupon} onChange={handleChange} required />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField fullWidth label="ชื่อร้าน/กิจการ" type="number"  name="store_id" value={formData.store_id} onChange={handleChange} required InputLabelProps={{ shrink: true }}/>
+                                    </Grid>
+                                    {/* <Grid item xs={12} sm={6}>
+                                        <TextField fullWidth label="จังหวัด" name="location" value={formData.location} onChange={handleChange} required />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField fullWidth label="ที่อยู่" name="address" value={formData.address} onChange={handleChange} required />
+                                    </Grid> */}
+                                     <Grid item xs={12} sm={6}>
+                                        <TextField fullWidth type="date" label="ระยะเวลาการใช้คูปอง (จาก)" name="start_Date" value={formData.start_Date} onChange={handleChange} InputLabelProps={{ shrink: true }}  />
+                                    </Grid> 
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField fullWidth type="date" label="ถึง" name="end_Date" value={formData.end_Date } onChange={handleChange} InputLabelProps={{ shrink: true }}  />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField fullWidth label="ประเภทคูปอง" name="type" value={formData.type} onChange={handleChange} required />
+                                 </Grid> 
+                                  
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField fullWidth label="จำนวนคูปอง" type="number" name="number_of_coupons" value={formData.number_of_coupons  } onChange={handleChange} required InputProps={{ inputProps: { min: 1 } }} />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <TextField fullWidth label="เงื่อนไขการใช้งาน" name="details" value={formData.details} onChange={handleChange} multiline rows={4}  />
+                                    </Grid>
+
+                                    {/* ปุ่มบันทึก */}
+                                    <Grid item xs={12} sx={{ textAlign: "right", mt: 2 }}>
+                                        <Button type="submit" variant="contained" color="success" size="large">
+                                            บันทึก
+                                        </Button>
+                                    </Grid>
+                                </Grid>
+                            </form>
+                        </CardContent>
+                    </Card>
                 </Container>
             </Box>
         </div>

@@ -7,12 +7,12 @@ async function create(data) {
     const res = await prisma.ticket.create({
       data: {
         coupon_id: data.coupon_id,
-        store_id: data.store_id || 1,
+        store_id: data.store_id ,
         name_coupon: data.name_coupon || '',
         start_Date: data.start_Date || new Date(),
         end_Date: data.end_Date || new Date(),
         type: data.type || '',
-        number_of_coupons: data.number_of_coupons || 0,
+        number_of_coupons: data.number_of_coupons ,
         details: data.details || ''
       }
     });
