@@ -1,4 +1,5 @@
 import prisma from '@/libs';
+import { imageConfigDefault } from 'next/dist/shared/lib/image-config';
 
 async function create(data) {
   try {
@@ -13,7 +14,8 @@ async function create(data) {
         end_Date: data.end_Date || new Date(),
         type: data.type || '',
         number_of_coupons: data.number_of_coupons ,
-        details: data.details || ''
+        details: data.details || '',
+        image: data.image || ''
       }
     });
 

@@ -43,4 +43,7 @@ async function GET() {
   });
 }
 
-export { POST, GET };
+
+
+
+export { POST, GET, UPDATE };

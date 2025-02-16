@@ -20,6 +20,8 @@ const pages = [
   { name: 'หน้าหลัก', path: '/admin/home' },
   { name: 'เพิ่มคูปอง', path: '/admin/form' },
   { name: 'คูปองทั้งหมด', path: '/admin/coupons' },
+  { name: 'เพิ่มร้าน/กิจการ', path: '/admin/store' },
+  { name: 'ร้านทั้งหมด', path: '/admin/viewstore' },
 ];
 
 const settings = ['Profile', 'Account', 'Logout'];
