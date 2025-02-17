@@ -26,37 +26,64 @@
     return data;
   };
 
-  const remove = async (coupon) => {
-    const url = `http://localhost:3000/api/coupon`;
+  
+
+
+  const update = async (coupon_id, data) => {
+    const url = `http://localhost:3000/api/coupon/admin/${coupon_id}`;
   
     const response = await fetch(url, {
-      method: 'DELETE',
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify(data),
     });
-    const data = await response.json();
-    return data;
-  };
-
-  const update = async () => {
-    const url = `http://localhost:3000/api/coupon`;
   
-    const response = await fetch(url, {
-      method: 'UPDATE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    const data = await response.json();
-    return data;
+    const responseData = await response.json(); 
+    return responseData ; 
   };
 
+  const getByCoupon = async (coupon_id) => {
+    console.log("coupon_id in api servics",coupon_id);
+    
+     const url = `http://localhost:3000/api/coupon/admin/${coupon_id}`;
+   
+     const response = await fetch(url, {
+       method: 'GET',
+       headers: {
+         'Content-Type': 'application/json',
+       },  
+     });
+   
+     const responseData = await response.json(); 
+     return responseData ; 
+   };
+
+
+   const remove = async (coupon_id) => {
+    const url = `http://localhost:3000/api/coupon`;
+
+    const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ coupon_id }), // ส่งข้อมูล coupon_id ไปยัง API
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to delete coupon");
+    }
+
+    const data = await response.json();
+    return data;
+};
 
 
 
   const Coupon = { 
-    create, getAll, remove, update
+    create, getAll, remove, getByCoupon, update
   };
   
   export default Coupon;

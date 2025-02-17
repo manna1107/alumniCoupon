@@ -41,19 +41,6 @@ const create = async (formData) => {
   };
   
 
-  const remove = async () => {
-    const url = `http://localhost:3000/api/store`;
-  
-    const response = await fetch(url, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    const data = await response.json();
-    return data;
-  };
-
   const getBystore = async (store_id) => {
    console.log("store_id in api servics",store_id);
    
@@ -68,6 +55,19 @@ const create = async (formData) => {
   
     const responseData = await response.json(); 
     return responseData ; 
+  };
+
+  const remove = async () => {
+    const url = `http://localhost:3000/api/store`;
+  
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const data = await response.json();
+    return data;
   };
 
   const Store = { 

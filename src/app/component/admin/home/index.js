@@ -55,12 +55,12 @@ export default function ActiveCouponsPage({ response, responseStore }) {
   return (
     <div>
       <Header sx={{ width: "100%" }} />
-      <Container sx={{ mt: 16 }}>
-        <Typography variant="h4" gutterBottom>
+      <Container sx={{ mt: 18 }}>
+        <Typography variant="h4" gutterBottom sx={{ fontWeight: "bold", mb: 2 }}>
           🎟️ คูปองที่ใช้งานได้ในปัจจุบัน
         </Typography>
 
-        <Grid container spacing={3}>
+        <Grid container spacing={3} mt={2}>
           {coupons.map((coupon) => {
             const store = responseStore.find(
               (store) => store.store_id === coupon.store_id
@@ -113,7 +113,7 @@ export default function ActiveCouponsPage({ response, responseStore }) {
                         variant="contained"
                         sx={{ bgcolor: "#FFA500" }}
                         startIcon={<Edit />}
-                        onClick={() => router.push(`/admin/form`)}
+                        onClick={() => router.push(`/admin/form/${coupon.coupon_id}`)} 
                       >
                         แก้ไข
                       </Button>

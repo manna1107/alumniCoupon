@@ -4,12 +4,63 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { Container,  Button,Typography, Card, CardContent,Grid, CircularProgress } from "@mui/material";
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import Header from "../../../component/header";
 import Save from '../../../../services/api/save'
 
 export default function MyTicketPage({ response, responseStore, responseSave }) {
   const { data: session, status } = useSession()
   const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [selectedCoupon, setSelectedCoupon] = useState(null);
+  
+  const handleUseCoupon = async (couponId) => {
+    const confirmUse = window.confirm("คุณต้องการใช้คูปองนี้หรือไม่?");
+    if (!confirmUse) return;
+  
+    try {
+      const response = await Save.useCoupon({ coupon_id: couponId, user_id: session.user.id });
+  
+      if (response.success) {
+        alert("ใช้คูปองสำเร็จ!");
+        // สามารถเพิ่ม logic โหลดข้อมูลใหม่หรือ redirect ได้
+      } else {
+        alert("เกิดข้อผิดพลาดในการใช้คูปอง");
+      }
+    } catch (error) {
+      console.error("Error using coupon:", error);
+      alert("ไม่สามารถใช้คูปองได้");
+    }
+  };
+
+    const handleClickOpen = (couponId) => {
+      setSelectedCoupon(couponId);
+      setOpen(true);
+    };
+    
+    const handleClose = () => {
+      setOpen(false);
+    };
+
+    const handleConfirmUseCoupon = async () => {
+      try {
+        const response = await Save.useCoupon({ coupon_id: selectedCoupon, user_id: session.user.id });
+    
+        if (response.success) {
+          alert("ใช้คูปองสำเร็จ!");
+          setOpen(false);
+        } else {
+          alert("เกิดข้อผิดพลาดในการใช้คูปอง");
+        }
+      } catch (error) {
+        console.error("Error using coupon:", error);
+        alert("ไม่สามารถใช้คูปองได้");
+      }
+    };
+    
+  
+  
+
 
   return (
     <div>
@@ -46,7 +97,7 @@ export default function MyTicketPage({ response, responseStore, responseSave }) 
                       p: 2,
                     }}
                   >
-                    <CardContent>
+                    <CardContent sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                       <Typography variant="h6">
                         📌 {store ? store.store_name : "ไม่พบข้อมูล"}
                       </Typography>
@@ -54,17 +105,40 @@ export default function MyTicketPage({ response, responseStore, responseSave }) 
                       <Typography>📋 ประเภท: {couponsss ? couponsss.type : "ไม่พบข้อมูล"}</Typography>
                       <Typography>🔢 จำนวน: {couponsss ? couponsss.number_of_coupons : "ไม่พบข้อมูล"} ใบ</Typography>
                     </CardContent>
-                    <CardContent
-                      sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}
+                    <CardContent sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      sx={{ mt: 2, width: "120px" }}
+                      onClick={() => handleClickOpen(coupon.coupon_id)}
                     >
+                      ใช้คูปอง
+                    </Button>
+                  </CardContent>
 
-                    </CardContent>
                   </Card>
                 </Grid>
+                
               );
             })}
         </Grid>
       </Container>
+          <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>ยืนยันการใช้คูปอง</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              คุณต้องการใช้คูปองนี้หรือไม่? โปรดยืนยันการดำเนินการ
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="secondary">
+              ยกเลิก
+            </Button>
+            <Button onClick={handleConfirmUseCoupon} color="primary">
+              ยืนยันการใช้คูปอง
+            </Button>
+          </DialogActions>
+        </Dialog>
     </div>
   );
 }

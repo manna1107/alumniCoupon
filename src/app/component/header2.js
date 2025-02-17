@@ -18,10 +18,10 @@ import { useSession, signIn, signOut } from 'next-auth/react'; // ✅ Import use
 
 const pages = [
   { name: 'หน้าหลัก', path: '/admin/home' },
-  { name: 'เพิ่มคูปอง', path: '/admin/form' },
-  { name: 'คูปองทั้งหมด', path: '/admin/coupons' },
   { name: 'เพิ่มร้าน/กิจการ', path: '/admin/store' },
+  { name: 'เพิ่มคูปอง', path: '/admin/form' },
   { name: 'ร้านทั้งหมด', path: '/admin/viewstore' },
+  { name: 'คูปองทั้งหมด', path: '/admin/coupons' },
 ];
 
 const settings = ['Profile', 'Account', 'Logout'];

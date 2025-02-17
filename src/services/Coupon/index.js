@@ -15,7 +15,7 @@ async function create(data) {
         type: data.type || '',
         number_of_coupons: data.number_of_coupons ,
         details: data.details || '',
-        image: data.image || ''
+        // image: data.image || ''
       }
     });
 
@@ -53,46 +53,77 @@ async function getAll() {
 }
 
 // ✅ อัปเดตข้อมูลคูปอง
-async function update(coupon_id, data) {
+async function updateById(id, data) {
   try {
-    const res = await prisma.ticket.update({
-      where: { coupon_id },
+    console.log("Received data:", id, data);
+
+    const idAsInt = Number(id);
+    const updatedCoupon = await prisma.ticket.update({
+      where: {
+        coupon_id: idAsInt,
+      },
       data: {
-        name_coupon: data.name_coupon || "",
+        name_coupon: data.name_coupon || '',
         start_Date: data.start_Date || new Date(),
         end_Date: data.end_Date || new Date(),
-        type: data.type || "",
-        number_of_coupons: data.number_of_coupons || 0,
-        details: data.details || "",
-      }
+        type: data.type || '',
+        number_of_coupons: data.number_of_coupons ,
+        details: data.details || ''
+        
+      },
     });
-    return res;
+
+    return updatedCoupon;
+
+
   } catch (error) {
-    console.error('Error updating coupon:', error.message);
-    throw error;
+    console.error("Error updating coupon:", error);
+    throw new Error("Failed to update coupon");
   }
+
+
 }
 
-// ✅ ลบคูปอง
-async function remove(coupon_id) {
-  try {
-    const res = await prisma.ticket.delete({
-      where: { coupon_id }
-    });
-    return res;
-  } catch (error) {
-    console.error('Error deleting coupon:', error.message);
-    throw error;
-  }
+async function getByCoupon(id) {
+  const idAsInt = Number(id);
+  const res = await prisma.ticket.findUnique({
+    where: {
+      coupon_id: idAsInt,
+    },
+  });
+  return res;
 }
+
+// async function remove(coupon_id) {
+//   try {
+//     const res = await prisma.ticket.delete({
+//       where: {
+//         coupon_id: Number(coupon_id), // แปลงเป็นตัวเลขก่อนใช้
+//       },
+//     });
+
+//     return res; // คืนค่าข้อมูลที่ถูกลบ
+//   } catch (error) {
+//     console.error("Error deleting coupon:", error);
+
+//     if (error.code === "P2025") {
+//       // Prisma error: Record to delete does not exist
+//       throw new Error("Coupon not found");
+//     }
+
+//     throw new Error("Failed to delete coupon");
+//   }
+// }
+
 
 // Export ฟังก์ชันทั้งหมด
 const Coupon = {   
   create, 
   getAll,
   get,
-  update,
-  remove
+  updateById,
+  getByCoupon
+  //remove
 };
 
 export default Coupon;

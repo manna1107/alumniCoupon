@@ -42,16 +42,16 @@ export default function StoreForm() {
     return (
         <div>
             <Header />
-            <Box sx={{ display: "flex", justifyContent: "center", mt: 12 }}>
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 16 }}>
                 <Container maxWidth="md">
                     <Card sx={{ p: 3, backgroundColor: "#ffffff", boxShadow: 3 }}>
                         <CardContent>
-                            <Typography variant="h5" align="center" sx={{ fontWeight: "bold", mb: 2 }}>
+                            <Typography variant="h4" align="center" sx={{ fontWeight: "bold", mb: 2 }}>
                                 เพิ่มร้าน/กิจการ
                             </Typography>
 
                             <form onSubmit={handleSubmit}>
-                                <Grid container spacing={2}>
+                                <Grid container spacing={2} sx={{ mt: 2 }}>
                                     {/* ชื่อร้าน/กิจการ */}
                                     <Grid item xs={12}>
                                         <TextField

@@ -8,22 +8,23 @@ export default function StoreList({ responseStore }) {
         <div>
             <Header />
             <Box sx={{ display: "flex", justifyContent: "center", mt: 16 }}>
-                <Container maxWidth="md">
-                    <Typography variant="h5" align="center" sx={{ fontWeight: "bold", mb: 2 }}>
+                <Container maxWidth="lg">
+                    <Typography variant="h4" align="center" sx={{ fontWeight: "bold", mb: 2, mt: 4 }}>
                         รายการร้าน/กิจการ
                     </Typography>
                     {/* แสดงข้อมูลในรูปแบบตาราง */}
-                    <TableContainer component={Paper}>
+                    <TableContainer component={Paper} sx={{  mt: 4 }}>
                         <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell align="center">#</TableCell>
-                                    <TableCell align="center">ชื่อร้าน/กิจการ</TableCell>
-                                    <TableCell align="center">จังหวัด</TableCell>
-                                    <TableCell align="center">ที่อยู่</TableCell>
-                                    <TableCell align="center">แก้ไข</TableCell>
-                                </TableRow>
-                            </TableHead>
+                        <TableHead>
+                            <TableRow sx={{ backgroundColor: "#1976d2" }}> {/* เปลี่ยนสีพื้นหลังของแถวหัวตาราง */}
+                                <TableCell align="center" sx={{ color: "white", fontWeight: "bold" }}>ลำดับ</TableCell>
+                                <TableCell align="center" sx={{ color: "white", fontWeight: "bold" }}>ชื่อร้าน/กิจการ</TableCell>
+                                <TableCell align="center" sx={{ color: "white", fontWeight: "bold" }}>จังหวัด</TableCell>
+                                <TableCell align="center" sx={{ color: "white", fontWeight: "bold" }}>ที่อยู่</TableCell>
+                                <TableCell align="center" sx={{ color: "white", fontWeight: "bold" }}>แก้ไข</TableCell>
+                            </TableRow>
+                        </TableHead>
+
                             <TableBody>
                                 {responseStore.map((store, index) => {
                                     return (

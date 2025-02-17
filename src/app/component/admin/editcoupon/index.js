@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from 'next/navigation';
 import { Box, Container, TextField, Button, Grid, Typography, Card, CardMedia, CardContent, FormControl, InputLabel, MenuItem, Select , Autocomplete } from "@mui/material";
 import Header from "../../header2";
 import Coupon from '../../../../services/api/coupon';
@@ -10,25 +10,38 @@ import Store from '../../../../services/api/store';
 
 export default function CouponForm() {
     const router = useRouter();
+    const { coupon_id } = useParams();
+    const idAsInt = Number(coupon_id);
+
+    console.log("idAsInt",idAsInt);
 
     const [formData, setFormData] = useState({
         name_coupon: "",
-        store_id: 0,
         start_Date: "",
         end_Date: "",
         type: "",
         number_of_coupons: 0,
-        details: "",
+        details: ""
     });
 
 
     const [image, setImage] = useState(null);
     const [previewImage, setPreviewImage] = useState(null);
-    const [dataStore, setDataStore] = useState();
+     const [dataStore, setDataStore] = useState();
 
     useEffect(() => {
 
-        async function getStore() {
+        async function getDataById() {
+            try {       
+              const getdataById = await Coupon.getByCoupon(idAsInt);
+              setFormData(getdataById.body)
+            } catch (error) {
+              console.error('Error fetching data:', error);
+            }
+          }
+          getDataById();
+
+          async function getStore() {
             try {
                 const stores = await Store.getAll();
                 setDataStore(stores.body)
@@ -37,9 +50,15 @@ export default function CouponForm() {
             }
         }
         getStore();
-    })
+    
 
-    // อัปเดตค่าฟอร์ม
+        }, [coupon_id]);
+
+        
+      
+
+
+    //อัปเดตค่าฟอร์ม
     const handleChange = (e) => {
         const { name, value } = e.target;
 
@@ -76,7 +95,7 @@ export default function CouponForm() {
 
 
 
-    // จัดการไฟล์รูปภาพ
+    //จัดการไฟล์รูปภาพ
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -88,20 +107,16 @@ export default function CouponForm() {
     // บันทึกข้อมูล
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-
         try {
-            await Coupon.create({ data: formData })
-            router.push("/admin/home");
-
+                await Coupon.update(idAsInt ,formData);
+                router.push("/admin/home"); 
         } catch (error) {
             console.error("Error submitting data:", error);
-            alert("เกิดข้อผิดพลาดในการเชื่อมต่อ API");
+            alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
         }
-        console.log(formData)
     };
 
-    console.log(Date)
+    //console.log(Date)
 
     return (
         <div>
@@ -119,7 +134,19 @@ export default function CouponForm() {
                                 <Grid container spacing={2} sx ={{ mt:2}}>
                                     {/* ส่วนข้อมูลฟอร์ม */}
                                     <Grid item xs={12} sm={6}>
-                                        <TextField fullWidth label="ชื่อคูปอง" name="name_coupon" value={formData.name_coupon} onChange={handleChange} required />
+                                        <TextField 
+                                        fullWidth 
+                                        label="ชื่อคูปอง" 
+                                        name="name_coupon" 
+                                        value={formData.name_coupon} 
+                                        onChange={(e) => {
+                                            const { name, value } = e.target;
+                                            setFormData(prevState => ({
+                                                ...prevState, 
+                                                [name]: value,
+                                            }));
+                                        }}  
+                                        required />
                                     </Grid>
                                     {/* <Grid item xs={12} sm={6}>
                                         <TextField fullWidth label="ชื่อร้าน/กิจการ" type="number"  name="store_id" value={formData.store_id} onChange={handleChange} required InputLabelProps={{ shrink: true }}/>
@@ -157,20 +184,66 @@ export default function CouponForm() {
                                         <TextField fullWidth label="ที่อยู่" name="address" value={formData.address} onChange={handleChange} required />
                                     </Grid> */}
                                     <Grid item xs={12} sm={6}>
-                                        <TextField fullWidth type="date" label="ระยะเวลาการใช้คูปอง (จาก)" name="start_Date" value={formData.start_Date ? formData.start_Date.split("T")[0] : ""} onChange={handleChange} InputLabelProps={{ shrink: true }} />
+                                        <TextField 
+                                        fullWidth 
+                                        type="date" 
+                                        label="ระยะเวลาการใช้คูปอง (จาก)" 
+                                        name="start_Date" 
+                                        value={formData.start_Date ? formData.start_Date.split("T")[0] : ""} 
+                                        onChange={handleChange} 
+                                            InputLabelProps={{ shrink: true }} />
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
-                                        <TextField fullWidth type="date" label="ถึง" name="end_Date" value={formData.end_Date ? formData.end_Date.split("T")[0] : ""} onChange={handleChange} InputLabelProps={{ shrink: true }} />
+                                        <TextField 
+                                        fullWidth 
+                                        type="date" 
+                                        label="ถึง" 
+                                        name="end_Date" 
+                                        value={formData.end_Date ? formData.end_Date.split("T")[0] : ""} 
+                                        onChange={handleChange} 
+                                        InputLabelProps={{ shrink: true }} />
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
-                                        <TextField fullWidth label="ประเภทคูปอง" name="type" value={formData.type} onChange={handleChange} required />
+                                        <TextField 
+                                        fullWidth 
+                                        label="ประเภทคูปอง" 
+                                        name="type" 
+                                        value={formData.type} 
+                                        onChange={(e) => {
+                                            const { name, value } = e.target;
+                                            setFormData(prevState => ({
+                                                ...prevState, 
+                                                [name]: value,
+                                            }));
+                                        }}  
+                                        required />
                                     </Grid>
 
                                     <Grid item xs={12} sm={6}>
-                                        <TextField fullWidth label="จำนวนคูปอง" type="number" name="number_of_coupons" value={formData.number_of_coupons || ""} onChange={handleChange} required InputProps={{ inputProps: { min: 1 } }} />
+                                        <TextField 
+                                        fullWidth 
+                                        label="จำนวนคูปอง" 
+                                        type="number" 
+                                        name="number_of_coupons" 
+                                        value={formData.number_of_coupons || ""} 
+                                        onChange={handleChange}  
+                                        required 
+                                        InputProps={{ inputProps: { min: 1 } }} />
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <TextField fullWidth label="เงื่อนไขการใช้งาน" name="details" value={formData.details} onChange={handleChange} multiline rows={4} />
+                                        <TextField 
+                                        fullWidth 
+                                        label="เงื่อนไขการใช้งาน" 
+                                        name="details" 
+                                        value={formData.details} 
+                                        onChange={(e) => {
+                                            const { name, value } = e.target;
+                                            setFormData(prevState => ({
+                                                ...prevState, 
+                                                [name]: value,
+                                            }));
+                                        }}  
+                                        multiline rows={4} />
                                     </Grid>
                                     {/* อัปโหลดรูปภาพ */}
                                     <Grid item xs={12}>
@@ -199,7 +272,7 @@ export default function CouponForm() {
                                     {/* ปุ่มบันทึก */}
                                     <Grid item xs={12} sx={{ textAlign: "right", mt: 2 }}>
                                         <Button type="submit" variant="contained" color="success" size="large">
-                                            บันทึก
+                                            อัพเดท
                                         </Button>
                                     </Grid>
                                 </Grid>

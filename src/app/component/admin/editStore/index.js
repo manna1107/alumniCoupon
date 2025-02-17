@@ -60,7 +60,7 @@ export default function StoreForm() {
                                 "แก้ไขร้าน/กิจการ"
                             </Typography>
 
-                            <form onSubmit={handleSubmit}>
+                            <form onSubmit={handleSubmit} >
                                 <Grid container spacing={2}>
                                     <Grid item xs={12}>
                                         <TextField

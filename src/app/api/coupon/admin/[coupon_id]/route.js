@@ -1,20 +1,20 @@
 import { NextResponse } from 'next/server';
-import Store from '../../../../../services/Store'; 
+import Coupon from '../../../../../services/Coupon'; 
 
 
 async function GET(_req, { params }) {
 
 
-    const { store_id } = await params;
+    const { coupon_id } = await params;
     
-    console.log(store_id);
+    console.log(coupon_id);
     
-    const res = await Store.getByStore(store_id);
+    const res = await Coupon.getByCoupon(coupon_id);
 
     if (res) {
       return NextResponse.json({
         code: 200,
-        message: 'store Details',
+        message: 'coupon Details',
         body: res,
       });
     }
@@ -28,13 +28,13 @@ async function GET(_req, { params }) {
   
 
 async function PUT(req, { params }) {
-    const { store_id } = await params;
+    const { coupon_id } = await params;
    
   try {
     const updatedData = await req.json(); 
 
-    const updated = await Store.updateById(store_id , updatedData);
-       
+    const updated = await Coupon.updateById(coupon_id , updatedData);
+    
     if (updated) {
       return NextResponse.json({
         code: 200,
@@ -55,6 +55,8 @@ async function PUT(req, { params }) {
     });
   }
 }
+
+
 
 
   export { PUT ,GET };

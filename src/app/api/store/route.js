@@ -46,4 +46,4 @@ async function GET() {
 
 
 
-export { POST, GET, UPDATE };
+export { POST, GET };
