@@ -15,7 +15,7 @@ async function create(data) {
         type: data.type || '',
         number_of_coupons: data.number_of_coupons ,
         details: data.details || '',
-        // image: data.image || ''
+        image: data.image || '',
       }
     });
 
@@ -68,10 +68,12 @@ async function updateById(id, data) {
         end_Date: data.end_Date || new Date(),
         type: data.type || '',
         number_of_coupons: data.number_of_coupons ,
-        details: data.details || ''
+        details: data.details || '',
+        image: data.image || ''
+      }
         
       },
-    });
+    );
 
     return updatedCoupon;
 
@@ -94,26 +96,32 @@ async function getByCoupon(id) {
   return res;
 }
 
-// async function remove(coupon_id) {
-//   try {
-//     const res = await prisma.ticket.delete({
-//       where: {
-//         coupon_id: Number(coupon_id), // แปลงเป็นตัวเลขก่อนใช้
-//       },
-//     });
+async function remove(coupon) {
 
-//     return res; // คืนค่าข้อมูลที่ถูกลบ
-//   } catch (error) {
-//     console.error("Error deleting coupon:", error);
+  const couponed = await prisma.ticket.findUnique({
+    where: {
+      coupon_id: coupon,
+    },
+  });
+  // console.log(typeof coupon_id);
+  if (couponed){
+    const res = await prisma.ticket.delete({
+      where: {
+        coupon_id: coupon, // แปลงเป็นตัวเลขก่อนใช้
+      },
+    });
+    return res; // คืนค่าข้อมูลที่ถูกลบ
+  } else  {
+    console.error("Error deleting coupon:", error);
 
-//     if (error.code === "P2025") {
-//       // Prisma error: Record to delete does not exist
-//       throw new Error("Coupon not found");
-//     }
+    if (error.code === "P2025") {
+      // Prisma error: Record to delete does not exist
+      throw new Error("Coupon not found");
+    }
 
-//     throw new Error("Failed to delete coupon");
-//   }
-// }
+    throw new Error("Failed to delete coupon");
+  }
+}
 
 
 // Export ฟังก์ชันทั้งหมด
@@ -122,8 +130,8 @@ const Coupon = {
   getAll,
   get,
   updateById,
-  getByCoupon
-  //remove
+  getByCoupon,
+  remove
 };
 
 export default Coupon;

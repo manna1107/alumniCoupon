@@ -62,22 +62,20 @@
 
 
    const remove = async (coupon_id) => {
-    const url = `http://localhost:3000/api/coupon`;
+    const url = `http://localhost:3000/api/coupon/admin/${coupon_id}`;
 
     const response = await fetch(url, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ coupon_id }), // ส่งข้อมูล coupon_id ไปยัง API
+        }, 
     });
-
-    if (!response.ok) {
-        throw new Error("Failed to delete coupon");
-    }
 
     const data = await response.json();
     return data;
+
+    // const data = await response.json();
+    // return data;
 };
 
 

@@ -99,11 +99,20 @@ export default function MyTicketPage({ response, responseStore, responseSave }) 
                   >
                     <CardContent sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                       <Typography variant="h6">
-                        📌 {store ? store.store_name : "ไม่พบข้อมูล"}
+                        {couponsss ? couponsss.name_coupon : "ไม่พบข้อมูล"}
                       </Typography>
-                      <Typography>🏪 ร้านค้า: {store ? store.store_name : "ไม่พบข้อมูล"}</Typography>
-                      <Typography>📋 ประเภท: {couponsss ? couponsss.type : "ไม่พบข้อมูล"}</Typography>
-                      <Typography>🔢 จำนวน: {couponsss ? couponsss.number_of_coupons : "ไม่พบข้อมูล"} ใบ</Typography>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+                      <Typography>⏳ เริ่ม: {new Date(couponsss.start_Date).toLocaleDateString()}</Typography>
+                      <Typography color="error">หมดอายุ: {new Date(couponsss.end_Date).toLocaleDateString()}</Typography>
+                      </div>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+                      <Typography>ร้าน: {store ? store.store_name : "ไม่พบข้อมูล"}</Typography>
+                      <Typography>จังหวัด: {store ? store.location : "ไม่พบข้อมูล"}</Typography>
+                      </div>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+                      <Typography>ประเภท: {couponsss ? couponsss.type : "ไม่พบข้อมูล"}</Typography>
+                      <Typography>จำนวน: {couponsss ? couponsss.number_of_coupons : "ไม่พบข้อมูล"} ใบ</Typography>
+                      </div>
                     </CardContent>
                     <CardContent sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
                     <Button

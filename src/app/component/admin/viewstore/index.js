@@ -1,32 +1,63 @@
 "use client";
-import { Box, Container, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from "@mui/material";
+
+import { useState } from "react";
+import { Box, Container, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, TextField } from "@mui/material";
 import Header from "../../header2";
 
 export default function StoreList({ responseStore }) {
+    const [searchTerm, setSearchTerm] = useState("");
+
+    // ฟังก์ชันกรองข้อมูลตามคำค้นหา
+    const filteredStores = responseStore.filter((store) => {
+        const storeName = store.store_name.toLowerCase();
+        const storeLocation = store.location.toLowerCase();
+        const storeAddress = store.address.toLowerCase();
+        const searchLowerCase = searchTerm.toLowerCase();
+
+        return (
+            storeName.includes(searchLowerCase) ||
+            storeLocation.includes(searchLowerCase) ||
+            storeAddress.includes(searchLowerCase)
+        );
+    });
 
     return (
         <div>
             <Header />
             <Box sx={{ display: "flex", justifyContent: "center", mt: 16 }}>
                 <Container maxWidth="lg">
-                    <Typography variant="h4" align="center" sx={{ fontWeight: "bold", mb: 2, mt: 4 }}>
-                        รายการร้าน/กิจการ
-                    </Typography>
+                    {/* กล่องที่มีข้อความด้านซ้ายและช่องค้นหาด้านขวา */}
+                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <Typography variant="h4" align="left" sx={{  mb: 2, mt: 4 }}>
+                            รายการร้าน/กิจการ
+                        </Typography>
+
+                        {/* ช่องค้นหาอยู่ขวามือ */}
+                        <TextField
+                            label="ค้นหาร้าน/กิจการ"
+                            variant="outlined"
+                            size="small"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            sx={{ width: "300px" }} // ขนาดของช่องค้นหา
+                        />
+                    </Box>
+
                     {/* แสดงข้อมูลในรูปแบบตาราง */}
-                    <TableContainer component={Paper} sx={{  mt: 4 }}>
+                    <TableContainer component={Paper} >
                         <Table>
-                        <TableHead>
-                            <TableRow sx={{ backgroundColor: "#1976d2" }}> {/* เปลี่ยนสีพื้นหลังของแถวหัวตาราง */}
-                                <TableCell align="center" sx={{ color: "white", fontWeight: "bold" }}>ลำดับ</TableCell>
-                                <TableCell align="center" sx={{ color: "white", fontWeight: "bold" }}>ชื่อร้าน/กิจการ</TableCell>
-                                <TableCell align="center" sx={{ color: "white", fontWeight: "bold" }}>จังหวัด</TableCell>
-                                <TableCell align="center" sx={{ color: "white", fontWeight: "bold" }}>ที่อยู่</TableCell>
-                                <TableCell align="center" sx={{ color: "white", fontWeight: "bold" }}>แก้ไข</TableCell>
-                            </TableRow>
-                        </TableHead>
+                            <TableHead>
+                                <TableRow sx={{ backgroundColor: "#1976d2" }}> {/* เปลี่ยนสีพื้นหลังของแถวหัวตาราง */}
+                                    <TableCell align="center" sx={{ color: "white", fontWeight: "bold" }}>ลำดับ</TableCell>
+                                    <TableCell align="center" sx={{ color: "white", fontWeight: "bold" }}>ชื่อร้าน/กิจการ</TableCell>
+                                    <TableCell align="center" sx={{ color: "white", fontWeight: "bold" }}>จังหวัด</TableCell>
+                                    <TableCell align="center" sx={{ color: "white", fontWeight: "bold" }}>ที่อยู่</TableCell>
+                                    <TableCell align="center" sx={{ color: "white", fontWeight: "bold" }}>แก้ไข</TableCell>
+                                </TableRow>
+                            </TableHead>
 
                             <TableBody>
-                                {responseStore.map((store, index) => {
+                                {filteredStores.map((store, index) => {
                                     return (
                                         <TableRow key={store.store_id}>
                                             <TableCell align="center">{index + 1}</TableCell>

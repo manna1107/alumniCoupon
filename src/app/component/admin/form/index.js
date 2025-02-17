@@ -19,6 +19,8 @@ export default function CouponForm() {
         type: "",
         number_of_coupons: 0,
         details: "",
+        image: "",
+      
     });
 
 

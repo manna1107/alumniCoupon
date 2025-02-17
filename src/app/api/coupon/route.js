@@ -45,22 +45,22 @@ async function GET() {
   });
 }
 
-// async function DELETE(coupon_id) {
-//   const res = await Coupon.remove(coupon_id);
+async function DELETE(coupon_id) {
+  const res = await Coupon.remove(coupon_id);
 
-//   if (res) {
-//     return NextResponse.json({
-//       code: 201,
-//       message: 'Coupon delete',
-//       body: res,
-//     });
-//   }
+  if (res) {
+    return NextResponse.json({
+      code: 201,
+      message: 'Coupon delete',
+      body: res,
+    });
+  }
 
-//   return NextResponse.json({
-//     code: 400,
-//     message: 'Error delete coupon',
-//   });
-// }
+  return NextResponse.json({
+    code: 400,
+    message: 'Error delete coupon',
+  });
+}
 
 
 

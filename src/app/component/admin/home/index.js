@@ -11,12 +11,20 @@ import {
   Typography,
   Button,
   Box,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
 import Header from "../../header2";
 
 export default function ActiveCouponsPage({ response, responseStore }) {
   const [coupons, setCoupons] = useState(response || []);
+  const [filteredCoupons, setFilteredCoupons] = useState(response || []);
+  const [storeFilter, setStoreFilter] = useState("");
+  const [typeFilter, setTypeFilter] = useState("");
+  const [locationFilter, setLocationFilter] = useState("");
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -25,6 +33,32 @@ export default function ActiveCouponsPage({ response, responseStore }) {
       router.push("/");
     }
   }, [status, router]);
+
+  useEffect(() => {
+    let filtered = coupons;
+
+    if (storeFilter) {
+      filtered = filtered.filter((coupon) =>
+        responseStore.some(
+          (store) => store.store_id === coupon.store_id && store.store_name === storeFilter
+        )
+      );
+    }
+
+    if (typeFilter) {
+      filtered = filtered.filter((coupon) => coupon.type === typeFilter);
+    }
+
+    if (locationFilter) {
+      filtered = filtered.filter((coupon) =>
+        responseStore.some(
+          (store) => store.store_id === coupon.store_id && store.location === locationFilter
+        )
+      );
+    }
+
+    setFilteredCoupons(filtered);
+  }, [storeFilter, typeFilter, locationFilter, coupons, responseStore]);
 
   // ฟังก์ชันลบคูปอง
   const handleDeleteCoupon = async (coupon) => {
@@ -60,8 +94,66 @@ export default function ActiveCouponsPage({ response, responseStore }) {
           🎟️ คูปองที่ใช้งานได้ในปัจจุบัน
         </Typography>
 
+        {/* Filter Section */}
+        <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
+          {/* Filter by Store */}
+          <FormControl fullWidth>
+            <InputLabel>ร้าน</InputLabel>
+            <Select
+              value={storeFilter}
+              label="ร้าน"
+              onChange={(e) => setStoreFilter(e.target.value)}
+            >
+              <MenuItem value="">ทั้งหมด</MenuItem>
+              {responseStore.map((store) => (
+                <MenuItem key={store.store_id} value={store.store_name}>
+                  {store.store_name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          {/* Filter by Type */}
+          <FormControl fullWidth>
+            <InputLabel>ประเภท</InputLabel>
+            <Select
+              value={typeFilter}
+              label="ประเภท"
+              onChange={(e) => setTypeFilter(e.target.value)}
+            >
+              <MenuItem value="">ทั้งหมด</MenuItem>
+              {response.map((coupon) => (
+                <MenuItem key={coupon.coupon_id} value={coupon.type}>
+                  {coupon.type}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          {/* Filter by Location */}
+          <FormControl fullWidth>
+            <InputLabel>จังหวัด</InputLabel>
+            <Select
+              value={locationFilter}
+              label="จังหวัด"
+              onChange={(e) => setLocationFilter(e.target.value)}
+            >
+              <MenuItem value="">ทั้งหมด</MenuItem>
+              {responseStore
+                .map((store) => store.location)
+                .filter((value, index, self) => self.indexOf(value) === index) // Remove duplicates
+                .map((location) => (
+                  <MenuItem key={location} value={location}>
+                    {location}
+                  </MenuItem>
+                ))}
+            </Select>
+          </FormControl>
+        </Box>
+
+        {/* Coupons Display */}
         <Grid container spacing={3} mt={2}>
-          {coupons.map((coupon) => {
+          {filteredCoupons.map((coupon) => {
             const store = responseStore.find(
               (store) => store.store_id === coupon.store_id
             );
@@ -113,7 +205,7 @@ export default function ActiveCouponsPage({ response, responseStore }) {
                         variant="contained"
                         sx={{ bgcolor: "#FFA500" }}
                         startIcon={<Edit />}
-                        onClick={() => router.push(`/admin/form/${coupon.coupon_id}`)} 
+                        onClick={() => router.push(`/admin/form/${coupon.coupon_id}`)}
                       >
                         แก้ไข
                       </Button>
