@@ -50,11 +50,14 @@ export const authOptions = {
       return token
     },
     session: async ({ session, token }) => {
-      if (session.user) {
-        session.user.id = token.id
-        session.user.role = token.role
-      }
-      return session
+
+      return {
+        user: {
+          ...session.user,
+          id:  token.id,
+          role: token.role
+        },
+      };
     }
   },
 }

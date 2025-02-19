@@ -3,8 +3,11 @@ import { NextResponse } from 'next/server';
 
 
 async function GET(_req , { params }) {
-    const { id } = params;
-    const res = await Save.getByUser(id);
+
+  const { user_id } = await params;
+  const userId = parseInt(user_id, 10);
+
+    const res = await Save.getByUser(userId);
     if (res) {
       return NextResponse.json({
         code: 200,

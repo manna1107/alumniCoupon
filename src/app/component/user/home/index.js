@@ -10,6 +10,10 @@ import {
   CardContent,
   Typography,
   Button,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
   Box,
   TextField
 } from "@mui/material";
@@ -17,21 +21,41 @@ import Header from '../../header';
 import Save from '../../../../services/api/save';
 
 export default function ActiveCouponsPage({ response, responseStore }) {
+  const [saving, setSaving] = useState(false);
   const [savedCoupons, setSavedCoupons] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
- 
+  const [CouponFind, setCoupoFind] = useState([]);
+  const [userId, setUserID] = useState();
+
 
   const { data: session, status } = useSession();
   const router = useRouter();
 
+
+
   useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/");
+    if (status === "loading") {
+      return; // แสดง loading หรือรอให้ session โหลดก่อน
     }
-  }, [status, router]);
+  
+    if (status === "unauthenticated") {
+      router.push("/");  // ถ้าไม่ล็อกอินแล้วให้ไปหน้าหลัก
+    } else {
+      setUserID(session.user.id);  // เก็บ userId เมื่อ session โหลดเสร็จ
+      const fetchData = async () => {
+        const res = await Save.GetByUser(session.user.id);
+        setCoupoFind(res.body);
+      };
+      fetchData();
+    }
+  }, [session, status, router]);
+
+
 
   const handleSaveCoupon = async (coupon) => {
     if (savedCoupons[coupon.coupon_id]) return;
+
+   
 
     try {
       await Save.create({
@@ -39,6 +63,7 @@ export default function ActiveCouponsPage({ response, responseStore }) {
           user_id: session.user.id,
           coupon_id: coupon.coupon_id,
           saved_at: new Date(),
+          coupon_used_at: "ยังไม่ได้ใช้งาน"
         }
       });
 
@@ -98,36 +123,36 @@ export default function ActiveCouponsPage({ response, responseStore }) {
               return (
                 <Grid item xs={12} key={coupon.coupon_id}>
                   <Card sx={{ display: "flex", flexDirection: "row", alignItems: "center", borderRadius: 3, boxShadow: 3, width: "100%", minHeight: 150, p: 2 }}>
-                  <CardContent sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-                    <Typography variant="h6" fontWeight="bold">
-                      {coupon.name_coupon}
-                    </Typography>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
-                      <Typography color="textSecondary">⏳ เริ่ม: {new Date(coupon.start_Date).toLocaleDateString()}</Typography>
-                      <Typography color="error"> หมดอายุ: {new Date(coupon.end_Date).toLocaleDateString()}</Typography>
-                    </div>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
-                      <Typography color="textSecondary"> ร้าน: {store ? store.store_name : "ไม่พบข้อมูล"}</Typography>
-                      <Typography color="textSecondary"> จังหวัด: {store ? store.location : "ไม่พบข้อมูล"}</Typography>
-                    </div>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
-                      <Typography color="textSecondary"> ประเภท: {coupon.type}</Typography>
-                      <Typography color="textSecondary"> จำนวน: {coupon.number_of_coupons} ใบ</Typography>
-                    </div>
-                  </CardContent>
-                  <CardContent sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
-                    
+                    <CardContent sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                      <Typography variant="h6" fontWeight="bold">
+                        {coupon.name_coupon}
+                      </Typography>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+                        <Typography color="textSecondary">⏳ เริ่ม: {new Date(coupon.start_Date).toLocaleDateString()}</Typography>
+                        <Typography color="error"> หมดอายุ: {new Date(coupon.end_Date).toLocaleDateString()}</Typography>
+                      </div>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+                        <Typography color="textSecondary"> ร้าน: {store ? store.store_name : "ไม่พบข้อมูล"}</Typography>
+                        <Typography color="textSecondary"> จังหวัด: {store ? store.location : "ไม่พบข้อมูล"}</Typography>
+                      </div>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+                        <Typography color="textSecondary"> ประเภท: {coupon.type}</Typography>
+                        <Typography color="textSecondary"> จำนวน: {coupon.number_of_coupons} ใบ</Typography>
+                      </div>
+                    </CardContent>
+                    <CardContent sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
+
                       <Button
                         variant="contained"
                         color={savedCoupons[coupon.coupon_id] ? "success" : "primary"}
                         sx={{ mt: 2, width: "120px" }}
                         onClick={() => handleSaveCoupon(coupon)}
-                        disabled={savedCoupons[coupon.coupon_id]} // ปิดใช้งานเมื่อบันทึกแล้ว
+                        disabled={savedCoupons[coupon.coupon_id] || CouponFind.some(item => coupon.coupon_id === item.coupon_id)}  // ปิดใช้งานเมื่อบันทึกแล้ว
                       >
                         {savedCoupons[coupon.coupon_id] ? "✔️ เก็บแล้ว" : "เก็บคูปอง"}
                       </Button>
-                    
-                  </CardContent>
+
+                    </CardContent>
                   </Card>
                 </Grid>
               );

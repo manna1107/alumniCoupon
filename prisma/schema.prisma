@@ -7,6 +7,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model saved_coupons {
+  id             Int      @id @default(autoincrement())
+  user_id        Int
+  coupon_id      Int
+  saved_at       DateTime @default(now()) @db.Timestamp(0)
+  coupon_used_at String?   @db.VarChar(20)
+  users          users    @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "saved_coupons_ibfk_1")
+  ticket         ticket   @relation(fields: [coupon_id], references: [coupon_id], onUpdate: Restrict, map: "saved_coupons_ibfk_2")
+
+  @@index([coupon_id], map: "coupon_id")
+  @@index([user_id], map: "user_id")
+}
+
 model store {
   store_id   Int      @id @default(autoincrement())
   store_name String   @db.VarChar(100)
@@ -29,18 +42,6 @@ model ticket {
   store             store           @relation(fields: [store_id], references: [store_id], onDelete: Cascade, onUpdate: Restrict, map: "ticket_ibfk_1")
 
   @@index([store_id], map: "store_id")
-}
-
-model saved_coupons {
-  id        Int      @id @default(autoincrement())
-  user_id   Int
-  coupon_id Int
-  saved_at  DateTime @default(now()) @db.Timestamp(0)
-  users     users    @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "saved_coupons_ibfk_1")
-  ticket    ticket   @relation(fields: [coupon_id], references: [coupon_id], onUpdate: Restrict, map: "saved_coupons_ibfk_2")
-
-  @@index([coupon_id], map: "coupon_id")
-  @@index([user_id], map: "user_id")
 }
 
 model users {

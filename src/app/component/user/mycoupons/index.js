@@ -36,27 +36,6 @@ export default function ActiveCouponsPage({ response, responseStore, responseSav
     }
   }, [status, router]);
 
-  const handleSaveCoupon = async (coupon) => {
-    if (savedCoupons[coupon.coupon_id]) return;
-
-    try {
-      await Save.create({
-        data: {
-          user_id: session.user.id,
-          coupon_id: coupon.coupon_id,
-          saved_at: new Date(),
-        }
-      });
-
-      setSavedCoupons((prevState) => ({
-        ...prevState,
-        [coupon.coupon_id]: true,
-      }));
-    } catch (error) {
-      console.error('Error creating data:', error);
-    }
-  };
-
   const handleClickOpen = (couponId) => {
     setSelectedCoupon(couponId);
     setOpen(true);
@@ -145,7 +124,7 @@ export default function ActiveCouponsPage({ response, responseStore, responseSav
                     </div>
                   </CardContent>
                     <CardContent sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
-                      <Button variant="contained" color="primary" sx={{ mt: 2, width: "120px" }}  onClick={() => handleClickOpen(coupon.coupon_id)}>
+                      <Button variant="contained" color="success" sx={{ mt: 2, width: "120px" }}  onClick={() => handleClickOpen(coupon.coupon_id)}>
                         ใช้คูปอง
                       </Button>
                     </CardContent>

@@ -19,8 +19,6 @@ export default function CouponForm() {
         type: "",
         number_of_coupons: 0,
         details: "",
-        image: "",
-      
     });
 
 
@@ -80,30 +78,39 @@ export default function CouponForm() {
 
     // จัดการไฟล์รูปภาพ
     const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setImage(file);
-            setPreviewImage(URL.createObjectURL(file));
-        }
-    };
+        setImage(e.target.files[0]);
+      };
 
     // บันทึกข้อมูล
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-
-        try {
-            await Coupon.create({ data: formData })
-            router.push("/admin/home");
-
-        } catch (error) {
-            console.error("Error submitting data:", error);
-            alert("เกิดข้อผิดพลาดในการเชื่อมต่อ API");
+        const data = new FormData();
+    
+        // เพิ่มข้อมูลจากฟอร์ม
+        Object.keys(formData).forEach((key) => {
+          data.append(key, formData[key]);
+        });
+    
+        // เพิ่มไฟล์ภาพ
+        if (image) {
+          data.append('image', image);
         }
-        console.log(formData)
-    };
-
-    console.log(Date)
+    
+        try {
+          const response = await Coupon.create()
+    
+          if (response.ok) {
+            alert('Coupon created successfully!');
+          } else {
+            const result = await response.json();
+            alert('Error: ' + result.error);
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('Error submitting coupon');
+        }
+      };
+    
 
     return (
         <div>
@@ -180,7 +187,7 @@ export default function CouponForm() {
                                         <input type="file" accept="image/*" onChange={handleImageChange} />
                                     </Grid>
                                     {/* 🔹 แสดงรูปถ้ามีอัปโหลด */}
-                                    {previewImage && (
+                                    {/* {previewImage && (
                                         <CardMedia
                                             component="img"
                                             image={previewImage}
@@ -196,7 +203,7 @@ export default function CouponForm() {
                                                 mt: 2
                                             }}
                                         />
-                                    )}
+                                    )} */}
 
                                     {/* ปุ่มบันทึก */}
                                     <Grid item xs={12} sx={{ textAlign: "right", mt: 2 }}>

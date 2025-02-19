@@ -2,8 +2,10 @@ import prisma from '@/libs';
 import { imageConfigDefault } from 'next/dist/shared/lib/image-config';
 
 async function create(data) {
+  
   try {
     console.log("Received data:", data);
+    const imageBuffer = fs.readFileSync(imageFile.filepath);
 
     const res = await prisma.ticket.create({
       data: {
@@ -15,7 +17,7 @@ async function create(data) {
         type: data.type || '',
         number_of_coupons: data.number_of_coupons ,
         details: data.details || '',
-        image: data.image || '',
+        image: imageBuffer, 
       }
     });
 

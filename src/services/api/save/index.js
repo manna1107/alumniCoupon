@@ -11,10 +11,12 @@ const create = async (formData) => {
     return data || [];
   };
 
-  const GetByUser = async (id) => {
-    const url = `http://localhost:3000/api/save/user/${id}`;
-    console.log(`Requesting: ${url}`);
-    
+  const GetByUser = async (user_id) => {
+   
+    const url = `http://localhost:3000/api/save/user/${user_id}`;
+  
+ 
+
     const response = await fetch(url, {
       method: 'GET',
       headers: {
