@@ -57,18 +57,24 @@ const create = async (formData) => {
     return responseData ; 
   };
 
-  const remove = async () => {
-    const url = `http://localhost:3000/api/store`;
   
+  const remove = async (store_id) => {
+    const url = `http://localhost:3000/api/store/admin/${store_id}`;
+
     const response = await fetch(url, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+        }, 
     });
+
     const data = await response.json();
     return data;
-  };
+
+    // const data = await response.json();
+    // return data;
+};
+
 
   const Store = { 
     create, getAll, update, remove ,getBystore

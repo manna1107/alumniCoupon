@@ -10,21 +10,16 @@ import {
   CardContent,
   Typography,
   Button,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
   Box,
+  TextField
 } from "@mui/material";
 import Header from '../../header';
 import Save from '../../../../services/api/save';
 
 export default function ActiveCouponsPage({ response, responseStore }) {
-  const [saving, setSaving] = useState(false);
   const [savedCoupons, setSavedCoupons] = useState({});
-
-  const [couponTypeFilter, setCouponTypeFilter] = useState('');
-  const [locationFilter, setLocationFilter] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
+ 
 
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -36,6 +31,8 @@ export default function ActiveCouponsPage({ response, responseStore }) {
   }, [status, router]);
 
   const handleSaveCoupon = async (coupon) => {
+    if (savedCoupons[coupon.coupon_id]) return;
+
     try {
       await Save.create({
         data: {
@@ -45,7 +42,6 @@ export default function ActiveCouponsPage({ response, responseStore }) {
         }
       });
 
-      // Update saved coupons state to reflect that coupon has been saved
       setSavedCoupons((prevState) => ({
         ...prevState,
         [coupon.coupon_id]: true,
@@ -55,84 +51,53 @@ export default function ActiveCouponsPage({ response, responseStore }) {
     }
   };
 
-  const uniqueCouponTypes = [...new Set(response.map((coupon) => coupon.type))];
-  const uniqueLocations = [...new Set(responseStore.map((store) => store.location))];
+  const sortedCoupons = response || [];
 
-  // Filter coupons based on selected filters
-  const filteredCoupons = response.filter((coupon) => {
+  const filteredCoupons = sortedCoupons.filter((coupon) => {
     const store = responseStore.find((store) => store.store_id === coupon.store_id);
-    const isTypeMatch = couponTypeFilter ? coupon?.type === couponTypeFilter : true;
-    const isLocationMatch = locationFilter ? store?.location === locationFilter : true;
-    return isTypeMatch && isLocationMatch;
+    const storeName = store?.store_name?.toLowerCase() || "";
+    const storeLocation = store?.location?.toLowerCase() || "";
+    const couponName = coupon.name_coupon.toLowerCase();
+    const couponType = coupon.type.toLowerCase();
+    const startDate = new Date(coupon.start_Date).toLocaleDateString();
+    const endDate = new Date(coupon.end_Date).toLocaleDateString();
+    const searchLower = searchTerm.toLowerCase();
+
+    return (
+      storeName.includes(searchLower) ||
+      storeLocation.includes(searchLower) ||
+      couponName.includes(searchLower) ||
+      couponType.includes(searchLower) ||
+      startDate.includes(searchLower) ||
+      endDate.includes(searchLower)
+    );
   });
 
   return (
     <div>
       <Header sx={{ width: "100%" }} />
-      <Container sx={{ mt: 16 }}>
-        <Typography variant="h4" gutterBottom>
-          ️ คูปองที่ใช้งานได้ในปัจจุบัน
-        </Typography>
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 16 }}>
+        <Container maxWidth="lg">
+          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <Typography variant="h3" align="left" sx={{ mb: 2, mt: 4 }}>
+              คูปองแนะนำ
+            </Typography>
+            <TextField
+              label="ค้นหาคูปอง"
+              variant="outlined"
+              size="small"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              sx={{ width: "300px", mt: 2 }}
+            />
+          </Box>
 
-        {/* Filter Options */}
-        <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
-          <FormControl fullWidth>
-            <InputLabel>ประเภทคูปอง</InputLabel>
-            <Select
-              value={couponTypeFilter}
-              onChange={(e) => setCouponTypeFilter(e.target.value)}
-              label="ประเภทคูปอง"
-            >
-              <MenuItem value="">ทั้งหมด</MenuItem>
-              {uniqueCouponTypes.map((type, index) => (
-                <MenuItem key={index} value={type}>
-                  {type}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          <FormControl fullWidth>
-            <InputLabel>จังหวัด</InputLabel>
-            <Select
-              value={locationFilter}
-              onChange={(e) => setLocationFilter(e.target.value)}
-              label="จังหวัด"
-            >
-              <MenuItem value="">ทั้งหมด</MenuItem>
-              {uniqueLocations.map((location, index) => (
-                <MenuItem key={index} value={location}>
-                  {location}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Box>
-
-        <Grid container spacing={3}>
-          {filteredCoupons.map((coupon) => {
-            const store = responseStore.find(
-              (store) => store.store_id === coupon.store_id
-            );
-
-            // Check if the user has already saved the maximum allowed number of coupons for this type
-            const isCouponSaved = savedCoupons[coupon.coupon_id];
-            const isMaxCouponsSaved = isCouponSaved || savedCoupons[coupon.coupon_id] >= coupon.number_of_coupons;
-
-            return (
-              <Grid item xs={12} key={coupon.coupon_id}>
-                <Card
-                  sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    borderRadius: 3,
-                    boxShadow: 3,
-                    width: "100%",
-                    minHeight: 150,
-                    p: 2,
-                  }}
-                >
+          <Grid container spacing={3}>
+            {filteredCoupons.map((coupon) => {
+              const store = responseStore.find((store) => store.store_id === coupon.store_id);
+              return (
+                <Grid item xs={12} key={coupon.coupon_id}>
+                  <Card sx={{ display: "flex", flexDirection: "row", alignItems: "center", borderRadius: 3, boxShadow: 3, width: "100%", minHeight: 150, p: 2 }}>
                   <CardContent sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                     <Typography variant="h6" fontWeight="bold">
                       {coupon.name_coupon}
@@ -151,28 +116,25 @@ export default function ActiveCouponsPage({ response, responseStore }) {
                     </div>
                   </CardContent>
                   <CardContent sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
-                    {!isMaxCouponsSaved && (
+                    
                       <Button
                         variant="contained"
-                        color="primary"
+                        color={savedCoupons[coupon.coupon_id] ? "success" : "primary"}
                         sx={{ mt: 2, width: "120px" }}
                         onClick={() => handleSaveCoupon(coupon)}
-                        disabled={saving || isCouponSaved}
+                        disabled={savedCoupons[coupon.coupon_id]} // ปิดใช้งานเมื่อบันทึกแล้ว
                       >
-                        {isCouponSaved
-                          ? "✅ เก็บแล้ว"
-                          : saving
-                          ? "⏳ กำลังบันทึก..."
-                          : " เก็บคูปอง"}
+                        {savedCoupons[coupon.coupon_id] ? "✔️ เก็บแล้ว" : "เก็บคูปอง"}
                       </Button>
-                    )}
+                    
                   </CardContent>
-                </Card>
-              </Grid>
-            );
-          })}
-        </Grid>
-      </Container>
+                  </Card>
+                </Grid>
+              );
+            })}
+          </Grid>
+        </Container>
+      </Box>
     </div>
   );
 }

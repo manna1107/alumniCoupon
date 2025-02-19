@@ -19,7 +19,7 @@ model ticket {
   coupon_id         Int             @id @default(autoincrement())
   store_id          Int
   name_coupon       String          @db.VarChar(100)
-  start_Date        DateTime        @db.DateTime(0)
+  start_Date        DateTime        @default(now()) @db.DateTime(0)
   end_Date          DateTime        @db.DateTime(0)
   type              String          @db.VarChar(50)
   number_of_coupons Int

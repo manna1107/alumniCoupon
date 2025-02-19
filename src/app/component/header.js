@@ -14,7 +14,6 @@ const NextLinkComposed = forwardRef(function NextLinkComposed({ to, ...props }, 
 });
 
 const pages = ['หน้าหลัก', 'คูปองของฉัน'];
-const settings = ['Profile', 'Account', 'Logout'];
 
 function ResponsiveAppBar() {
   const { data: session } = useSession(); // ✅ เรียกข้อมูล session
@@ -30,12 +29,6 @@ function ResponsiveAppBar() {
 
   const handleUserMenuClick = (setting) => {
     switch (setting) {
-      case 'Profile':
-        router.push('/profile');
-        break;
-      case 'Account':
-        router.push('/account');
-        break;
       case 'Logout':
         signOut({ callbackUrl: '/' }); // ✅ ใช้ `signOut()` ของ NextAuth
         break;
@@ -89,11 +82,12 @@ function ResponsiveAppBar() {
                 </IconButton>
               </Tooltip>
               <Menu sx={{ mt: '45px' }} id="menu-appbar" anchorEl={anchorElUser} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} keepMounted transformOrigin={{ vertical: 'top', horizontal: 'right' }} open={Boolean(anchorElUser)} onClose={handleCloseUserMenu}>
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={() => handleUserMenuClick(setting)}>
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
-                ))}
+                <MenuItem disabled>
+                  <Typography textAlign="center" sx={{  fontWeight: 'bold' }}>{session.user?.name}</Typography>
+                </MenuItem>
+                <MenuItem onClick={() => handleUserMenuClick('Logout')}>
+                  <Typography textAlign="center">Logout</Typography>
+                </MenuItem>
               </Menu>
             </Box>
           ) : (

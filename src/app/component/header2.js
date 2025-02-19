@@ -1,17 +1,7 @@
 'use client';
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
+import { AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Button, Tooltip, MenuItem } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
 import Link from 'next/link'; // ✅ ใช้ Link จาก Next.js
 import { useRouter } from 'next/navigation';
 import { useSession, signIn, signOut } from 'next-auth/react'; // ✅ Import useSession และ signIn
@@ -23,8 +13,6 @@ const pages = [
   { name: 'ร้านทั้งหมด', path: '/admin/viewstore' },
   { name: 'คูปองทั้งหมด', path: '/admin/coupons' },
 ];
-
-const settings = ['Profile', 'Account', 'Logout'];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -39,12 +27,6 @@ function ResponsiveAppBar() {
 
   const handleUserMenuClick = (setting) => {
       switch (setting) {
-        case 'Profile':
-          router.push('/profile');
-          break;
-        case 'Account':
-          router.push('/account');
-          break;
         case 'Logout':
           signOut({ callbackUrl: '/' }); // ✅ ใช้ `signOut()` ของ NextAuth
           break;
@@ -108,17 +90,13 @@ function ResponsiveAppBar() {
                   <Avatar alt={session.user?.name || 'User'} src={session.user?.image || '/static/images/avatar/default.png'} />
                 </IconButton>
               </Tooltip>
-              <Menu
-                sx={{ mt: '45px' }}
-                anchorEl={anchorElUser}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={() => handleUserMenuClick(setting)}>
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
-                ))}
+              <Menu sx={{ mt: '45px' }} id="menu-appbar" anchorEl={anchorElUser} anchorOrigin={{ vertical: 'top', horizontal: 'right' }} keepMounted transformOrigin={{ vertical: 'top', horizontal: 'right' }} open={Boolean(anchorElUser)} onClose={handleCloseUserMenu}>
+                <MenuItem disabled>
+                  <Typography textAlign="center"  sx={{ fontWeight: 'bold' }}>{session.user?.name}</Typography>
+                </MenuItem>
+                <MenuItem onClick={() => handleUserMenuClick('Logout')}>
+                  <Typography textAlign="center">Logout</Typography>
+                </MenuItem>
               </Menu>
             </Box>
           ) : (

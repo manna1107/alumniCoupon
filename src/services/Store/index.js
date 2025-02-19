@@ -66,8 +66,35 @@ async function getByStore(id) {
   return res;
 }
 
+async function remove(store) {
+
+  const stored = await prisma.store.findUnique({
+    where: {
+      store_id: store,
+    },
+  });
+  // console.log(typeof store_id);
+  if (stored){
+    const res = await prisma.store.delete({
+      where: {
+        store_id: store, // แปลงเป็นตัวเลขก่อนใช้
+      },
+    });
+    return res; // คืนค่าข้อมูลที่ถูกลบ
+  } else  {
+    console.error("Error deleting store:", error);
+
+    if (error.code === "P2025") {
+      // Prisma error: Record to delete does not exist
+      throw new Error("Store not found");
+    }
+
+    throw new Error("Failed to delete store");
+  }
+}
+
 const Store = {
-  create, getAll, updateById, getByStore
+  create, getAll, updateById, getByStore, remove
 };
 
 export default Store;

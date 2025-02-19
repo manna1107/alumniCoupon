@@ -45,8 +45,21 @@ export default function SignIn() {
   }
 
   return (
+    <Box
+      sx={{
+        minHeight: "100vh", 
+        display: "flex",
+        justifyContent: "center",
+        //alignItems: "center",
+        backgroundImage: "url('/picture/PSU55years_11.jpg')", // ✅ เปลี่ยนเป็น path ของรูปภาพ
+        backgroundSize: "cover",
+        backgroundPosition: "30% 0%", // 30% จากซ้าย, 70% จากบน
+        backgroundRepeat: "no-repeat",
+        padding: 3,
+      }}
+    >
     <Container maxWidth="sm">
-      <Box mt={8} p={3} boxShadow={3} borderRadius={2} bgcolor="white" textAlign="center">
+      <Box mt={16} p={3} boxShadow={3} borderRadius={2} bgcolor="rgb(255, 255, 255, 0.9)" textAlign="center">
         <Image src="/picture/PSU-ARMS.png" alt="Logo" width={180} height={120} />
         <Typography variant="h5" gutterBottom>
           ระบบคูปองศิษย์เก่าสัมพันธ์
@@ -77,5 +90,7 @@ export default function SignIn() {
         </form>
       </Box>
     </Container>
+    </Box>
   )
+  
 }

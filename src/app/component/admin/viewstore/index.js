@@ -28,8 +28,8 @@ export default function StoreList({ responseStore }) {
                 <Container maxWidth="lg">
                     {/* กล่องที่มีข้อความด้านซ้ายและช่องค้นหาด้านขวา */}
                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                        <Typography variant="h4" align="left" sx={{  mb: 2, mt: 4 }}>
-                            รายการร้าน/กิจการ
+                        <Typography variant="h3" align="left" sx={{  mb: 2, mt: 4 }}>
+                            ร้าน/กิจการ
                         </Typography>
 
                         {/* ช่องค้นหาอยู่ขวามือ */}
@@ -39,7 +39,7 @@ export default function StoreList({ responseStore }) {
                             size="small"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            sx={{ width: "300px" }} // ขนาดของช่องค้นหา
+                            sx={{ width: "300px", mt: 2 }} // ขนาดของช่องค้นหา
                         />
                     </Box>
 

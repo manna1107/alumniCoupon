@@ -56,5 +56,25 @@ async function PUT(req, { params }) {
   }
 }
 
+async function DELETE(_req ,{params }
+) {
+  const classId = Number(params.store_id);
 
-  export { PUT ,GET };
+  console.log("classId", typeof classId);
+
+  const deleted = await Store.remove(classId);
+  if (deleted) {
+    return NextResponse.json({
+      code: 200,
+      message: 'Class deleted successfully',
+    });
+  }
+
+  return NextResponse.json({
+    code: 404,
+    message: 'Class not found for deletion',
+  });
+}
+
+
+  export { PUT ,GET, DELETE};

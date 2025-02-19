@@ -36,4 +36,24 @@ async function PUT(req, { params }) {
   }
 }
 
-export { GET, PUT };
+// async function POST(req, res) {
+//   try {
+//     const coupon = await prisma.coupon.findUnique({ where: { coupon_id: couponId } });
+
+//     if (!coupon || coupon.number_of_coupons <= 0) {
+//       return res.status(400).json({ message: "คูปองหมดแล้ว" });
+//     }
+
+//     // อัปเดตจำนวนคูปองในฐานข้อมูล
+//     await prisma.coupon.update({
+//       where: { coupon_id: couponId },
+//       data: { number_of_coupons: coupon.number_of_coupons - 1 },
+//     });
+
+//     res.status(200).json({ message: "เก็บคูปองสำเร็จ" });
+//   } catch (error) {
+//     res.status(500).json({ message: "เกิดข้อผิดพลาด", error });
+//   }
+// }
+
+export { GET, PUT} //, POST};
