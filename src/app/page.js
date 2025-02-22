@@ -35,6 +35,7 @@ export default function SignIn() {
         router.push("/admin/home")
       } else if (session.user.role === "user") {
         router.push("/user/home")
+       
       }
 
     } catch (error) {

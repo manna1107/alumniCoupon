@@ -94,7 +94,7 @@ async function remove(store) {
 }
 
 const Store = {
-  create, getAll, updateById, getByStore, remove
+  create,  updateById, getByStore, remove ,getAll
 };
 
 export default Store;

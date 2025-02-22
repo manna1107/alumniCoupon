@@ -9,6 +9,7 @@ export default async function Mycouponspage() {
   const response = await Coupon.getAll();
   const responseStore = await Store.getAll();
   const responseSave = await Save.getAll();
+  
  
     return (
         <div>

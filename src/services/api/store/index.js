@@ -24,7 +24,6 @@ const create = async (formData) => {
     return data;
   };
 
-
   const update = async (store_id, data) => {
     const url = `http://localhost:3000/api/store/admin/${store_id}`;
   
@@ -40,7 +39,6 @@ const create = async (formData) => {
     return responseData ; 
   };
   
-
   const getBystore = async (store_id) => {
    console.log("store_id in api servics",store_id);
    
@@ -57,7 +55,6 @@ const create = async (formData) => {
     return responseData ; 
   };
 
-  
   const remove = async (store_id) => {
     const url = `http://localhost:3000/api/store/admin/${store_id}`;
 
@@ -77,7 +74,7 @@ const create = async (formData) => {
 
 
   const Store = { 
-    create, getAll, update, remove ,getBystore
+    create,  update, remove ,getBystore ,getAll
   };
   
 

@@ -1,11 +1,11 @@
 import prisma from '@/libs';
-import { imageConfigDefault } from 'next/dist/shared/lib/image-config';
+
 
 async function create(data) {
   
   try {
     console.log("Received data:", data);
-    const imageBuffer = fs.readFileSync(imageFile.filepath);
+    //const imageBuffer = fs.readFileSync(imageFile.filepath);
 
     const res = await prisma.ticket.create({
       data: {
@@ -17,7 +17,7 @@ async function create(data) {
         type: data.type || '',
         number_of_coupons: data.number_of_coupons ,
         details: data.details || '',
-        image: imageBuffer, 
+        
       }
     });
 
@@ -71,7 +71,7 @@ async function updateById(id, data) {
         type: data.type || '',
         number_of_coupons: data.number_of_coupons ,
         details: data.details || '',
-        image: data.image || ''
+       
       }
         
       },
@@ -126,6 +126,29 @@ async function remove(coupon) {
 }
 
 
+// async function couponLimit(req, res) {
+//   const { coupon_id } = req.query;
+
+//   if (!coupon_id) return res.status(400).json({ error: "Coupon ID is required" });
+
+//   const coupon = await prisma.coupon.findUnique({
+//     where: { coupon_id: Number(coupon_id) },
+//     include: { save_coupons: true },
+//   });
+
+//   if (!coupon) return res.status(404).json({ error: "Coupon not found" });
+
+//   const usedCount = coupon.save_coupons.length;
+//   const remaining = Math.max(0, coupon.number_of_coupons - usedCount);
+
+//   res.status(200).json({
+//     name_coupon: coupon.code,
+//     number_of_coupons: coupon.number_of_coupons,
+//     used: usedCount,
+//     remaining,
+//   });
+// }
+
 // Export ฟังก์ชันทั้งหมด
 const Coupon = {   
   create, 
@@ -133,7 +156,8 @@ const Coupon = {
   get,
   updateById,
   getByCoupon,
-  remove
+  remove,
+  //couponLimit
 };
 
 export default Coupon;

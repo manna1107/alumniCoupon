@@ -10,8 +10,6 @@
     const data = await response.json();
     return data || [];
   };
-
-
   
   const getAll = async () => {
     const url = `http://localhost:3000/api/coupon`;
@@ -26,10 +24,7 @@
     return data;
   };
 
-  
-
-
-  const update = async (coupon_id, data) => {
+  const update = async (coupon_id) => {
     const url = `http://localhost:3000/api/coupon/admin/${coupon_id}`;
   
     const response = await fetch(url, {
@@ -60,7 +55,6 @@
      return responseData ; 
    };
 
-
    const remove = async (coupon_id) => {
     const url = `http://localhost:3000/api/coupon/admin/${coupon_id}`;
 
@@ -81,7 +75,7 @@
 
 
   const Coupon = { 
-    create, getAll, remove, getByCoupon, update
+    create,  remove, getByCoupon, update ,getAll
   };
   
   export default Coupon;

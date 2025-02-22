@@ -5,7 +5,7 @@ import Store from "../../../services/Store";
 export default async function Couponpage() {
 
     const response = await Coupon.get();
-    const responseStore = await Store.getAll();
+    //const responseStore = await Store.getAll();
  
     return (
         <div>

@@ -10,15 +10,12 @@ import {
   CardContent,
   Typography,
   Button,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
   Box,
   TextField
 } from "@mui/material";
 import Header from '../../header';
 import Save from '../../../../services/api/save';
+
 
 export default function ActiveCouponsPage({ response, responseStore }) {
   const [saving, setSaving] = useState(false);
@@ -41,6 +38,9 @@ export default function ActiveCouponsPage({ response, responseStore }) {
     if (status === "unauthenticated") {
       router.push("/");  // ถ้าไม่ล็อกอินแล้วให้ไปหน้าหลัก
     } else {
+     
+
+      localStorage.setItem("SessionId",session.user.id)
       setUserID(session.user.id);  // เก็บ userId เมื่อ session โหลดเสร็จ
       const fetchData = async () => {
         const res = await Save.GetByUser(session.user.id);

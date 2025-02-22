@@ -30,6 +30,7 @@ async function POST(req) {
 
 async function GET() {
   const res = await Coupon.getAll();
+  //const limit = await Coupon.couponLimit();
 
   if (res) {
     return NextResponse.json({

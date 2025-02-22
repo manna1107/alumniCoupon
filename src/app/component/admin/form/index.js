@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Box, Container, TextField, Button, Grid, Typography, Card, CardMedia, CardContent, FormControl, InputLabel, MenuItem, Select , Autocomplete } from "@mui/material";
+import { Box, Container, TextField, Button, Grid, Typography, Card, CardContent, Autocomplete } from "@mui/material";
 import Header from "../../header2";
 import Coupon from '../../../../services/api/coupon';
 import Store from '../../../../services/api/store';
@@ -77,34 +77,28 @@ export default function CouponForm() {
 
 
     // จัดการไฟล์รูปภาพ
-    const handleImageChange = (e) => {
-        setImage(e.target.files[0]);
-      };
+    // const handleImageChange = (e) => {
+    //     setImage(e.target.files[0]);
+    //   };
 
     // บันทึกข้อมูล
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const data = new FormData();
+        // const data = new FormData();
     
-        // เพิ่มข้อมูลจากฟอร์ม
-        Object.keys(formData).forEach((key) => {
-          data.append(key, formData[key]);
-        });
+        // // เพิ่มข้อมูลจากฟอร์ม
+        // Object.keys(formData).forEach((key) => {
+        //   data.append(key, formData[key]);
+        // });
     
-        // เพิ่มไฟล์ภาพ
-        if (image) {
-          data.append('image', image);
-        }
+        // // เพิ่มไฟล์ภาพ
+        // if (image) {
+        //   data.append('image', image);
+        // }
     
         try {
-          const response = await Coupon.create()
-    
-          if (response.ok) {
+          const response = await Coupon.create({data: formData});
             alert('Coupon created successfully!');
-          } else {
-            const result = await response.json();
-            alert('Error: ' + result.error);
-          }
         } catch (error) {
           console.error('Error:', error);
           alert('Error submitting coupon');
@@ -130,9 +124,6 @@ export default function CouponForm() {
                                     <Grid item xs={12} sm={6}>
                                         <TextField fullWidth label="ชื่อคูปอง" name="name_coupon" value={formData.name_coupon} onChange={handleChange} required />
                                     </Grid>
-                                    {/* <Grid item xs={12} sm={6}>
-                                        <TextField fullWidth label="ชื่อร้าน/กิจการ" type="number"  name="store_id" value={formData.store_id} onChange={handleChange} required InputLabelProps={{ shrink: true }}/>
-                                    </Grid> */}
                                     <Grid item xs={12} sm={6}>
                                     <Autocomplete
                                         options={dataStore || []}
@@ -158,13 +149,6 @@ export default function CouponForm() {
                                         )}
                                     />
                                     </Grid>
-
-                                    {/* <Grid item xs={12} sm={6}>
-                                        <TextField fullWidth label="จังหวัด" name="location" value={formData.location} onChange={handleChange} required />
-                                    </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                        <TextField fullWidth label="ที่อยู่" name="address" value={formData.address} onChange={handleChange} required />
-                                    </Grid> */}
                                     <Grid item xs={12} sm={6}>
                                         <TextField fullWidth type="date" label="ระยะเวลาการใช้คูปอง (จาก)" name="start_Date" value={formData.start_Date ? formData.start_Date.split("T")[0] : ""} onChange={handleChange} InputLabelProps={{ shrink: true }} />
                                     </Grid>
@@ -182,10 +166,10 @@ export default function CouponForm() {
                                         <TextField fullWidth label="เงื่อนไขการใช้งาน" name="details" value={formData.details} onChange={handleChange} multiline rows={4} />
                                     </Grid>
                                     {/* อัปโหลดรูปภาพ */}
-                                    <Grid item xs={12}>
+                                    {/* <Grid item xs={12}>
                                         <Typography variant="subtitle1">อัปโหลดรูปภาพ(ถ้ามี) :</Typography>
                                         <input type="file" accept="image/*" onChange={handleImageChange} />
-                                    </Grid>
+                                    </Grid> */}
                                     {/* 🔹 แสดงรูปถ้ามีอัปโหลด */}
                                     {/* {previewImage && (
                                         <CardMedia

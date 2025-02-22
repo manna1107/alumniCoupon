@@ -14,8 +14,6 @@ const create = async (formData) => {
   const GetByUser = async (user_id) => {
    
     const url = `http://localhost:3000/api/save/user/${user_id}`;
-  
- 
 
     const response = await fetch(url, {
       method: 'GET',
@@ -26,10 +24,38 @@ const create = async (formData) => {
     const data = await response.json();
     return data;
   };
+
+  const update = async (coupon_id,data) => {  
+    const url = `http://localhost:3000/api/save/coupon/${coupon_id}`;
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    const responseData = await response.json();
+    return responseData || [];
+  };
+
   
+  const getAll = async () => {
+    const url = `http://localhost:3000/api/save`;
+  
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const data = await response.json();
+    return data;
+  };
   
   const Save = { 
     create,
-    GetByUser
+    getAll,
+    GetByUser,
+    update
   };
   export default Save;

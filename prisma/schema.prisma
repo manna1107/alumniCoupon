@@ -37,7 +37,6 @@ model ticket {
   type              String          @db.VarChar(50)
   number_of_coupons Int
   details           String          @db.VarChar(255)
-  image             Bytes           @db.Blob
   saved_coupons     saved_coupons[]
   store             store           @relation(fields: [store_id], references: [store_id], onDelete: Cascade, onUpdate: Restrict, map: "ticket_ibfk_1")
 

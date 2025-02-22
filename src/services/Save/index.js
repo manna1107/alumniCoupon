@@ -12,7 +12,7 @@ async function create(data) {
         coupon_id: data.coupon_id || '',
         saved_at: data.saved_at || new Date(),
         coupon_used_at: data.coupon_used_at || ''
- 
+
       }
     });
 
@@ -27,7 +27,7 @@ async function create(data) {
 
 async function getByUser(user_id) {
   try {
-  
+
     Number(user_id)
     const res = await prisma.saved_coupons.findMany({
       where: {
@@ -69,12 +69,47 @@ async function getAll(id) {
 }
 
 
+async function updateStatus(coupon_id, data) {
+  try {
+    console.log("Received data:", coupon_id, data);
 
-// Export ฟังก์ชันทั้งหมด
+    const findupdate = await prisma.saved_coupons.findMany(
+      {
+        where: {
+          coupon_id: coupon_id,
+          user_id: data.user_id
+        },
+      }
+    );
+
+    const updatedCoupon = await prisma.saved_coupons.update({
+      where: {
+        id: findupdate[0].coupon_id
+      },
+      data: {
+        coupon_used_at: data || '',
+      },
+    });
+
+    console.log("updatedCoupon:", updatedCoupon);
+
+    return updatedCoupon;
+
+  } catch (error) {
+    console.error("Error updating coupon:", error);
+    throw new Error("Failed to update coupon");
+  }
+}
+
+
+
+
 const Save = {
   create,
   getAll,
-  getByUser
+  getByUser,
+  updateStatus
+  
 };
 
 export default Save;

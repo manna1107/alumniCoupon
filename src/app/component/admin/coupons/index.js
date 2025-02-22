@@ -72,6 +72,12 @@ export default function ActiveCouponsPage({ response, responseStore }) {
     );
   });
 
+  
+  
+  // เรียกใช้งาน
+  //getCouponStatus(1).then(console.log);
+  
+
   return (
     <div>
       <Header sx={{ width: "100%" }} />
