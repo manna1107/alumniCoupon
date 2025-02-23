@@ -5,7 +5,7 @@
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(formData.data),
+      body: JSON.stringify(formData),
     });
     const data = await response.json();
     return data || [];
@@ -24,7 +24,7 @@
     return data;
   };
 
-  const update = async (coupon_id) => {
+  const update = async (coupon_id ,data) => {
     const url = `http://localhost:3000/api/coupon/admin/${coupon_id}`;
   
     const response = await fetch(url, {

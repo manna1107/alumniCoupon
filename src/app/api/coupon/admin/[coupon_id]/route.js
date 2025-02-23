@@ -4,9 +4,7 @@ import Coupon from '../../../../../services/Coupon';
 
 async function GET(_req, { params }) {
 
-
   const { coupon_id } = await params;
-
   console.log(coupon_id);
 
   const res = await Coupon.getByCoupon(coupon_id);
@@ -24,8 +22,6 @@ async function GET(_req, { params }) {
     message: 'Not found data',
   });
 }
-
-
 
 async function PUT(req, { params }) {
   const { coupon_id } = await params;

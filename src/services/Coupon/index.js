@@ -1,4 +1,5 @@
 import prisma from '@/libs';
+import { DatasetLinkedTwoTone, DatasetOutlined } from '@mui/icons-material';
 
 
 async function create(data) {
@@ -55,9 +56,9 @@ async function getAll() {
 }
 
 // ✅ อัปเดตข้อมูลคูปอง
-async function updateById(id, data) {
+async function updateById(id, datas) {
   try {
-    console.log("Received data:", id, data);
+    console.log("Received data:", id, datas);
 
     const idAsInt = Number(id);
     const updatedCoupon = await prisma.ticket.update({
@@ -65,12 +66,12 @@ async function updateById(id, data) {
         coupon_id: idAsInt,
       },
       data: {
-        name_coupon: data.name_coupon || '',
-        start_Date: data.start_Date || new Date(),
-        end_Date: data.end_Date || new Date(),
-        type: data.type || '',
-        number_of_coupons: data.number_of_coupons ,
-        details: data.details || '',
+        name_coupon: datas.name_coupon || '',
+        start_Date: datas.start_Date || new Date(),
+        end_Date: datas.end_Date || new Date(),
+        type: datas.type || '',
+        number_of_coupons: datas.number_of_coupons ,
+        details: datas.details || '',
        
       }
         
@@ -126,27 +127,21 @@ async function remove(coupon) {
 }
 
 
-// async function couponLimit(req, res) {
-//   const { coupon_id } = req.query;
+// async function couponLimit(coupon_id) {
+//   try {
+//     const coupon = await prisma.ticket.findUnique({
+//       where: { coupon_id: Number(coupon_id) }, // แปลงเป็นตัวเลข
+//       include: {
+//         saved_coupons: true, // ✅ ใช้ฟิลด์ที่มีอยู่จริง
+//         store: true, // ✅ ถ้ามีใน schema
+//       },
+//     });
 
-//   if (!coupon_id) return res.status(400).json({ error: "Coupon ID is required" });
-
-//   const coupon = await prisma.coupon.findUnique({
-//     where: { coupon_id: Number(coupon_id) },
-//     include: { save_coupons: true },
-//   });
-
-//   if (!coupon) return res.status(404).json({ error: "Coupon not found" });
-
-//   const usedCount = coupon.save_coupons.length;
-//   const remaining = Math.max(0, coupon.number_of_coupons - usedCount);
-
-//   res.status(200).json({
-//     name_coupon: coupon.code,
-//     number_of_coupons: coupon.number_of_coupons,
-//     used: usedCount,
-//     remaining,
-//   });
+//     return coupon;
+//   } catch (error) {
+//     console.error("Error fetching coupon limit:", error);
+//     throw new Error("Database error");
+//   }
 // }
 
 // Export ฟังก์ชันทั้งหมด
@@ -156,7 +151,7 @@ const Coupon = {
   get,
   updateById,
   getByCoupon,
-  remove,
+  remove
   //couponLimit
 };
 

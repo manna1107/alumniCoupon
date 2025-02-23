@@ -20,10 +20,6 @@ export default function StoreForm() {
       location : "",
       address : "" 
     });
- 
-    
-    
-    
     
     useEffect(() => {
         async function getDataById() {
@@ -47,7 +43,6 @@ export default function StoreForm() {
             alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
         }
     };
-
 
     return (
         <div>
@@ -116,7 +111,7 @@ export default function StoreForm() {
                                     </Grid>
                                     <Grid item xs={12} sx={{ textAlign: "right", mt: 2 }}>
                                         <Button type="submit" variant="contained" color="success" size="large">
-                                             อัพเดท
+                                            อัพเดท
                                         </Button>
                                     </Grid>
                                 </Grid>

@@ -62,6 +62,7 @@ export default function CouponForm() {
     const handleChange = (e) => {
         const { name, value } = e.target;
 
+    
         if (name === "store_id") {
             setFormData({
                 ...formData,
@@ -96,16 +97,17 @@ export default function CouponForm() {
 
 
     //จัดการไฟล์รูปภาพ
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setImage(file);
-            setPreviewImage(URL.createObjectURL(file));
-        }
-    };
+    // const handleImageChange = (e) => {
+    //     const file = e.target.files[0];
+    //     if (file) {
+    //         setImage(file);
+    //         setPreviewImage(URL.createObjectURL(file));
+    //     }
+    // };
 
     // บันทึกข้อมูล
     const handleSubmit = async (e) => {
+        console.log(formData);
         e.preventDefault();
         try {
                 await Coupon.update(idAsInt ,formData);
@@ -125,14 +127,11 @@ export default function CouponForm() {
                 <Container maxWidth="md">
                     <Card sx={{ p: 3, backgroundColor: "#ffffff", boxShadow: 3 }}>
                         <CardContent>
-                            {/* 🔹 ข้อความ "เพิ่มคูปอง" แสดงก่อน */}
                             <Typography variant="h4" align="center" sx={{ fontWeight: "bold", mb: 2 }}>
-                                เพิ่มคูปอง
+                                แก้ไขคูปอง
                             </Typography>
-
                             <form onSubmit={handleSubmit} encType="multipart/form-data">
                                 <Grid container spacing={2} sx ={{ mt:2}}>
-                                    {/* ส่วนข้อมูลฟอร์ม */}
                                     <Grid item xs={12} sm={6}>
                                         <TextField 
                                         fullWidth 
@@ -161,7 +160,7 @@ export default function CouponForm() {
                                         handleChange({
                                             target: {
                                             name: "store_id",
-                                            value: newValue ? newValue.store_id : "", // ใช้ "" แทน null
+                                            value: newValue ? newValue.store_id : "",
                                             },
                                         });
                                         }}
@@ -171,7 +170,7 @@ export default function CouponForm() {
                                             label="เลือกร้านค้า"
                                             required
                                             disabled={!dataStore}
-                                            value={formData.store_id || ""} // แก้ null ให้เป็น ""
+                                            value={formData.store_id || ""}
                                         />
                                         )}
                                     />
@@ -225,8 +224,8 @@ export default function CouponForm() {
                                         label="จำนวนคูปอง" 
                                         type="number" 
                                         name="number_of_coupons" 
-                                        value={formData.number_of_coupons || ""} 
-                                        onChange={handleChange}  
+                                        value={formData.number_of_coupons} 
+                                        onChange={handleChange}
                                         required 
                                         InputProps={{ inputProps: { min: 1 } }} />
                                     </Grid>
@@ -246,12 +245,12 @@ export default function CouponForm() {
                                         multiline rows={4} />
                                     </Grid>
                                     {/* อัปโหลดรูปภาพ */}
-                                    <Grid item xs={12}>
+                                    {/* <Grid item xs={12}>
                                         <Typography variant="subtitle1">อัปโหลดรูปภาพ(ถ้ามี) :</Typography>
                                         <input type="file" accept="image/*" onChange={handleImageChange} />
-                                    </Grid>
+                                    </Grid> */}
                                     {/* 🔹 แสดงรูปถ้ามีอัปโหลด */}
-                                    {previewImage && (
+                                    {/* {previewImage && (
                                         <CardMedia
                                             component="img"
                                             image={previewImage}
@@ -267,7 +266,7 @@ export default function CouponForm() {
                                                 mt: 2
                                             }}
                                         />
-                                    )}
+                                    )} */}
 
                                     {/* ปุ่มบันทึก */}
                                     <Grid item xs={12} sx={{ textAlign: "right", mt: 2 }}>

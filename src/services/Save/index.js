@@ -43,7 +43,7 @@ async function getByUser(user_id) {
 
 }
 
-async function getAll(id) {
+async function getAll() {
   try {
 
     /* if (!session || !session.user.user_id) {
@@ -53,12 +53,7 @@ async function getAll(id) {
     // const user_id = session.user.user_id; 
 
     const res = await prisma.saved_coupons.findMany({
-      where: {
-        id: id,
-        //  end_Date: {
-        //    gte: new Date(), 
-        //  }
-      },
+    
     });
 
     return res;

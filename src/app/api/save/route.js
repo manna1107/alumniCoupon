@@ -27,8 +27,10 @@ async function POST(req) {
   }
 }
 
+
+
 async function GET() {
-  const res = await Save.getByUser();
+  const res = await Save.getAll();
 
   if (res) {
     return NextResponse.json({
@@ -43,6 +45,7 @@ async function GET() {
     message: 'Error GET Data',
   });
 }
+
 
 
 

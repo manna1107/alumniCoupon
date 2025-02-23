@@ -17,7 +17,7 @@ import { Edit, Delete, Search } from "@mui/icons-material";
 import Header from "../../header2";
 import Coupon from "../../../../services/api/coupon";
 
-export default function ActiveCouponsPage({ response, responseStore }) {
+export default function ActiveCouponsPage({ response, responseStore  }) {
   const [coupons, setCoupons] = useState(response || []);
   const [searchQuery, setSearchQuery] = useState("");
   const { data: session, status } = useSession();

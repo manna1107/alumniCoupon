@@ -30,13 +30,13 @@ async function POST(req) {
 
 async function GET() {
   const res = await Coupon.getAll();
-  //const limit = await Coupon.couponLimit();
+  
 
   if (res) {
     return NextResponse.json({
       code: 201,
       message: 'Coupon All',
-      body: res,
+      body: { res, limit },
     });
   }
 
@@ -45,6 +45,9 @@ async function GET() {
     message: 'Error GET Data',
   });
 }
+
+
+
 
 async function DELETE(coupon_id) {
   const res = await Coupon.remove(coupon_id);
