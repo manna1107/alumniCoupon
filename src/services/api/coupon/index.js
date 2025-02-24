@@ -5,7 +5,7 @@
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(formData),
+      body: JSON.stringify(formData.data),
     });
     const data = await response.json();
     return data || [];

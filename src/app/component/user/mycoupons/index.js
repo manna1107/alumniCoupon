@@ -144,8 +144,18 @@ export default function ActiveCouponsPage({ response, responseStore, responseSav
                         {coupon.name_coupon}
                       </Typography>
                       <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
-                        <Typography color="textSecondary">⏳ เริ่ม: {new Date(coupon.start_Date).toLocaleDateString()}</Typography>
-                        <Typography color="error"> หมดอายุ: {new Date(coupon.end_Date).toLocaleDateString()}</Typography>
+                        <Typography color="textSecondary">⏳ เริ่ม: {new Date(coupon.start_Date).toLocaleDateString("th-TH", {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "2-digit",
+                          })}
+                        </Typography>
+                        <Typography color="error"> หมดอายุ: {new Date(coupon.end_Date).toLocaleDateString("th-TH", {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "2-digit",
+                          })}
+                        </Typography>
                       </div>
                       <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
                         <Typography color="textSecondary"> ร้าน: {store ? store.store_name : "ไม่พบข้อมูล"}</Typography>

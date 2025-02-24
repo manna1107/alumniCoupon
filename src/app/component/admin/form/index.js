@@ -97,7 +97,8 @@ export default function CouponForm() {
         // }
     
         try {
-          const response = await Coupon.create({data: formData});
+            const response = await Coupon.create({data: formData});
+
             alert('Coupon created successfully!');
         } catch (error) {
           console.error('Error:', error);
@@ -118,7 +119,7 @@ export default function CouponForm() {
                                 เพิ่มคูปอง
                             </Typography>
 
-                            <form onSubmit={handleSubmit} encType="multipart/form-data">
+                            <form onSubmit={handleSubmit}>
                                 <Grid container spacing={2} sx ={{ mt:2}}>
                                     {/* ส่วนข้อมูลฟอร์ม */}
                                     <Grid item xs={12} sm={6}>

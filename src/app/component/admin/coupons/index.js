@@ -18,6 +18,7 @@ import {
   Grid,
 } from "@mui/material";
 import Header from "../../header2";
+import Save from '../../../../services/api/save';
 
 
 export default function ActiveCouponsPage({ response, responseStore,savedCoupons }) {
@@ -25,6 +26,7 @@ export default function ActiveCouponsPage({ response, responseStore,savedCoupons
   const { data: session, status } = useSession();
   const [searchTerm, setSearchTerm] = useState("");
   const router = useRouter();
+  const [savedCouponsData, setSavedCouponsData] = useState();
 
   useEffect(() => {
     if (status === "unauthenticated") {

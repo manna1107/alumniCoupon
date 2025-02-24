@@ -151,10 +151,18 @@ export default function ActiveCouponsPage({ response, responseStore, savedCoupon
                       </Typography>
                       <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
                         <Typography color="textSecondary">
-                          ⏳ เริ่ม: {new Date(coupon.start_Date).toLocaleDateString()}
+                          ⏳ เริ่ม: {new Date(coupon.start_Date).toLocaleDateString("th-TH", {
+                              day: "2-digit",
+                              month: "2-digit",
+                              year: "2-digit",
+                            })}
                         </Typography>
                         <Typography color="error">
-                          หมดอายุ: {new Date(coupon.end_Date).toLocaleDateString()}
+                          หมดอายุ: {new Date(coupon.end_Date).toLocaleDateString("th-TH", {
+                              day: "2-digit",
+                              month: "2-digit",
+                              year: "2-digit",
+                            })}
                         </Typography>
                       </div>
                       <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
