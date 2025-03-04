@@ -19,8 +19,6 @@ import {
   DialogTitle
 } from "@mui/material";
 import Header from '../../header';
-import Coupon from "../../../../services/api/coupon";
-import Store from "../../../../services/api/store";
 import Save from '../../../../services/api/save';
 
 export default function ActiveCouponsPage({ response, responseStore, responseSave }) {
@@ -30,24 +28,17 @@ export default function ActiveCouponsPage({ response, responseStore, responseSav
   const [textStatus, setTextStatus] = useState("ใช้แล้ว");
   const [CouponIdOnChange, setCouponIdOnChange] = useState();
   const [StatusOfCoupon, setStatusOfCoupon] = useState("");
-  const [sessionId, setSessionId] = useState();
-
   const { data: session, status } = useSession();
   const router = useRouter();
 
-
-
-
   useEffect(() => {
     const fetchCouponStatus = async () => {
-
    
       if (status === "loading") {
         return <p>กำลังโหลดข้อมูล...</p>;
       }
         const statusData = await Save.GetByUser(session?.user?.id);
         setStatusOfCoupon(statusData?.coupon_used_at);
-    
     };
     fetchCouponStatus();
   }, [[session, status, router]]);
@@ -55,12 +46,9 @@ export default function ActiveCouponsPage({ response, responseStore, responseSav
 
   const userSavedCoupons = responseSave.filter((saved) => saved.user_id === session?.user?.id);
 
-
-
   const savedCoupons = response.filter((coupon) =>
     userSavedCoupons.some((saved) => saved.coupon_id === coupon.coupon_id)
   );
-
 
 
   // ✅ กรองคูปองตาม searchTerm
@@ -86,15 +74,11 @@ export default function ActiveCouponsPage({ response, responseStore, responseSav
     );
   });
 
-
   const handleClickOpen = (coupon) => {
     console.log("CouponIdOnChange", coupon.coupon_id);
     setCouponIdOnChange(coupon.coupon_id)
     setSelectedCoupon(coupon);
     setOpen(true);
-
-
-
 
   };
 
@@ -105,9 +89,14 @@ export default function ActiveCouponsPage({ response, responseStore, responseSav
   const handleConfirmUseCoupon = async () => {
     try {
 
-      await Save.update(Number(CouponIdOnChange), textStatus);
+      const dataResalt = {
+        user_id : session?.user?.id,
+        coupon_used_at : textStatus
+      }
+
+      await Save.update(Number(CouponIdOnChange), dataResalt );
       setOpen(false);
-    //  window.location.reload()
+     window.location.reload()
     } catch (error) {
       console.error("Error using coupon:", error);
       alert("ไม่สามารถใช้คูปองได้");
@@ -179,17 +168,51 @@ export default function ActiveCouponsPage({ response, responseStore, responseSav
           </Grid>
         </Container>
         <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>ยืนยันการใช้คูปอง</DialogTitle>
-          <DialogContent>
+  <DialogTitle>ยืนยันการใช้คูปอง</DialogTitle>
+      <DialogContent>
+        {selectedCoupon ? (
+          <>
+           <Typography variant="h6" fontWeight="bold">
+                {selectedCoupon.name_coupon}
+              </Typography>
             <DialogContentText>
-              คุณต้องการใช้คูปองนี้หรือไม่? โปรดยืนยันการดำเนินการ
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+              <Typography color="textSecondary">
+                ร้าน: {responseStore.find(store => store.store_id === selectedCoupon.store_id)?.store_name || "ไม่พบข้อมูล"}
+              </Typography>
+              <Typography color="textSecondary">
+                จังหวัด: {responseStore.find(store => store.store_id === selectedCoupon.store_id)?.location || "ไม่พบข้อมูล"}
+              </Typography>
+              <Typography color="textSecondary">
+                ประเภท: {selectedCoupon.type}
+              </Typography>
+              </div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+              <Typography color="textSecondary">
+                ⏳ เริ่ม: {new Date(selectedCoupon.start_Date).toLocaleDateString("th-TH", {
+                  day: "2-digit", month: "2-digit", year: "2-digit"
+                })}
+              </Typography>
+              <Typography color="error">
+                หมดอายุ: {new Date(selectedCoupon.end_Date).toLocaleDateString("th-TH", {
+                  day: "2-digit", month: "2-digit", year: "2-digit"
+                })}
+              </Typography>
+              </div>
+              <Typography color="textSecondary">
+                เงื่อนไขการใช้งาน: {selectedCoupon.details}
+              </Typography>
             </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color="secondary">ยกเลิก</Button>
-            <Button onClick={handleConfirmUseCoupon} color="primary">ยืนยัน</Button>
-          </DialogActions>
-        </Dialog>
+          </>
+        ) : (
+          <DialogContentText>กำลังโหลดข้อมูล...</DialogContentText>
+        )}
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} color="secondary">ยกเลิก</Button>
+        <Button onClick={handleConfirmUseCoupon} color="primary">ยืนยัน</Button>
+      </DialogActions>
+    </Dialog>
       </Box>
     </div>
   );

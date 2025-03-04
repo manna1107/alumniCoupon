@@ -66,7 +66,7 @@ async function getAll() {
 
 async function updateStatus(coupon_id, data) {
   try {
-    console.log("Received data:", coupon_id, data);
+    console.log("Received data2:", coupon_id, data);
 
     const findupdate = await prisma.saved_coupons.findMany(
       {
@@ -77,12 +77,14 @@ async function updateStatus(coupon_id, data) {
       }
     );
 
+    console.log("findupdate",findupdate[0]);
+    
     const updatedCoupon = await prisma.saved_coupons.update({
       where: {
-        id: findupdate[0].coupon_id
+        id: findupdate[0].id
       },
       data: {
-        coupon_used_at: data || '',
+        coupon_used_at: data.coupon_used_at || '',
       },
     });
 

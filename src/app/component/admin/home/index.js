@@ -29,7 +29,6 @@ export default function ActiveCouponsPage({ response, responseStore  }) {
     }
   }, [status, router]);
 
-  // ฟังก์ชันค้นหา
   const filteredCoupons = coupons.filter((coupon) => {
     const store = responseStore.find((store) => store.store_id === coupon.store_id);
     const searchLower = searchQuery.toLowerCase();
@@ -41,7 +40,6 @@ export default function ActiveCouponsPage({ response, responseStore  }) {
     );
   });
 
-  // ฟังก์ชันลบคูปอง
   const handleDeleteCoupon = async (coupon) => {
     if (!confirm(`คุณต้องการลบคูปอง "${coupon.name_coupon}" ใช่หรือไม่?`)) return;
 

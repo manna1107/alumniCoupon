@@ -52,7 +52,7 @@ export default function SignIn() {
         display: "flex",
         justifyContent: "center",
         //alignItems: "center",
-        backgroundImage: "url('/picture/PSU55years_11.jpg')", // ✅ เปลี่ยนเป็น path ของรูปภาพ
+        backgroundColor: "#1976D2", // ✅ เปลี่ยนเป็น path ของรูปภาพ
         backgroundSize: "cover",
         backgroundPosition: "30% 0%", // 30% จากซ้าย, 70% จากบน
         backgroundRepeat: "no-repeat",

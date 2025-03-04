@@ -41,11 +41,22 @@ export default function ActiveCouponsPage({ response, responseStore, savedCoupon
       setUserID(session.user.id); 
 
       const fetchData = async () => {
-        const res = await Save.GetByUser(session.user.id);
-        setCouponFind(res.body);
+        try {
+          const res = await Save.GetByUser(session.user.id);
+          const savedCouponIds = res.body.map((coupon) => coupon.coupon_id);
+  
+          // อัปเดต state ให้รู้ว่าคูปองไหนถูกบันทึกแล้ว
+          const savedCouponsState = {};
+          savedCouponIds.forEach((id) => {
+            savedCouponsState[id] = true;
+          });
+          setSavedCoupons(savedCouponsState);
+        } catch (error) {
+          console.error("Error fetching saved coupons:", error);
+        }
       };
       fetchData();
-    }
+  }
   }, [session, status, router]);
 
   
@@ -182,7 +193,7 @@ export default function ActiveCouponsPage({ response, responseStore, savedCoupon
                         onClick={() => handleSaveCoupon(coupon)}
                         disabled={isMaxLimit <= 0 || savedCoupons[coupon.coupon_id]}// ปิดใช้งานเมื่อบันทึกแล้ว
                       >
-                        {savedCoupons[coupon.coupon_id] ? "✔️ เก็บแล้ว" : "เก็บคูปอง"}
+                        {savedCoupons[coupon.coupon_id] ? "เก็บคูปอง" : "เก็บคูปอง"}
                       </Button>
                     </CardContent>
                   </Card>

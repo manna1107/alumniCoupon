@@ -15,7 +15,6 @@ export default function StoreForm() {
         address: "",
     });
 
-    // อัปเดตค่าฟอร์ม
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({
@@ -26,13 +25,12 @@ export default function StoreForm() {
         
     };
 
-    // บันทึกข้อมูล (สร้างร้าน)
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
             await Store.create({ data: formData });
-            router.push("/admin/home");  // เพิ่มการ redirect หลังการบันทึก
+            router.push("/admin/home");  
         } catch (error) {
             console.error("Error submitting data:", error);
             alert("เกิดข้อผิดพลาดในการเชื่อมต่อ API");

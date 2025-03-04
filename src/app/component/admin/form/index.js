@@ -21,13 +21,11 @@ export default function CouponForm() {
         details: "",
     });
 
-
     const [image, setImage] = useState(null);
     const [previewImage, setPreviewImage] = useState(null);
     const [dataStore, setDataStore] = useState();
 
     useEffect(() => {
-
         async function getStore() {
             try {
                 const stores = await Store.getAll();
@@ -39,7 +37,6 @@ export default function CouponForm() {
         getStore();
     })
 
-    // อัปเดตค่าฟอร์ม
     const handleChange = (e) => {
         const { name, value } = e.target;
 
