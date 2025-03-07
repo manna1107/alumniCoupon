@@ -1,4 +1,4 @@
-import prisma from '@/libs';
+import prisma from '@/libs/Prisma';
 import { getSession } from 'next-auth/react'; // ใช้ next-auth เพื่อดึง session ของผู้ใช้
 
 async function create(data) {

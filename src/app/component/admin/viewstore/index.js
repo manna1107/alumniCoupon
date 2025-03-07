@@ -44,7 +44,7 @@ export default function StoreList({ responseStore }) {
                     </Box>
 
                     {/* แสดงข้อมูลในรูปแบบตาราง */}
-                    <TableContainer component={Paper} >
+                    <TableContainer component={Paper}>
                         <Table>
                             <TableHead>
                                 <TableRow sx={{ backgroundColor: "#1976d2" }}> {/* เปลี่ยนสีพื้นหลังของแถวหัวตาราง */}
@@ -57,25 +57,34 @@ export default function StoreList({ responseStore }) {
                             </TableHead>
 
                             <TableBody>
-                                {filteredStores.map((store, index) => {
-                                    return (
-                                        <TableRow key={store.store_id}>
-                                            <TableCell align="center">{index + 1}</TableCell>
-                                            <TableCell align="center">{store.store_name}</TableCell>
-                                            <TableCell align="center">{store.location}</TableCell>
-                                            <TableCell align="center">{store.address}</TableCell>
-                                            <TableCell align="center">
-                                                {/* ปุ่มแก้ไข */}
-                                                <Button variant="outlined" size="small" href={`/admin/store/${store.store_id}`}>
-                                                    แก้ไข
-                                                </Button>
-                                            </TableCell>
-                                        </TableRow>
-                                    );
-                                })}
+                                {filteredStores?.length > 0 ? (
+                                    filteredStores.map((store, index) => (
+                                        store && (
+                                            <TableRow key={store.store_id}>
+                                                <TableCell align="center">{index + 1}</TableCell>
+                                                <TableCell align="center">{store.store_name || "-"}</TableCell>
+                                                <TableCell align="center">{store.location || "-"}</TableCell>
+                                                <TableCell align="center">{store.address || "-"}</TableCell>
+                                                <TableCell align="center">
+                                                    {/* ปุ่มแก้ไข */}
+                                                    <Button variant="outlined" size="small" href={`/admin/store/${store.store_id}`}>
+                                                        แก้ไข
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        )
+                                    ))
+                                ) : (
+                                    <TableRow>
+                                        <TableCell align="center" colSpan={5} sx={{ fontStyle: "italic", color: "gray" }}>
+                                            ไม่มีข้อมูลร้านค้า
+                                        </TableCell>
+                                    </TableRow>
+                                )}
                             </TableBody>
                         </Table>
                     </TableContainer>
+
                 </Container>
             </Box>
         </div>

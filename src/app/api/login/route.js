@@ -1,19 +1,25 @@
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 
 const users = [
   { id: 1, email: "admin@example.com", password: bcrypt.hashSync("admin123", 10), role: "admin" },
   { id: 2, email: "user@example.com", password: bcrypt.hashSync("user123", 10), role: "user" },
 ];
 
-export default function handler(req, res) {
-  if (req.method !== "POST") return res.status(405).json({ message: "Method Not Allowed" });
+export const POST = async (req) => {
+  try {
+    const body = await req.json(); // ใช้ .json() เพื่ออ่านค่า body
+    const { email, password } = body;
 
-  const { email, password } = req.body;
-  const user = users.find((u) => u.email === email);
+    const user = users.find((u) => u.email === email);
+    if (!user || !bcrypt.compareSync(password, user.password)) {
+      return new Response(JSON.stringify({ message: "Invalid email or password" }), { status: 401 });
+    }
 
-  if (!user || !bcrypt.compareSync(password, user.password)) {
-    return res.status(401).json({ message: "Invalid email or password" });
+    return new Response(JSON.stringify({ user: { id: user.id, email: user.email, role: user.role } }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    return new Response(JSON.stringify({ message: "Internal Server Error" }), { status: 500 });
   }
-
-  res.status(200).json({ user: { id: user.id, email: user.email, role: user.role } });
-}
+};

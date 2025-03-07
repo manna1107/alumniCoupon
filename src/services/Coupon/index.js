@@ -1,4 +1,4 @@
-import prisma from '@/libs';
+import prisma from '@/libs/Prisma';
 import { DatasetLinkedTwoTone, DatasetOutlined } from '@mui/icons-material';
 
 

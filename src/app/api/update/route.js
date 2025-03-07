@@ -1,4 +1,4 @@
-import { prisma } from '@/libs'; 
+import prisma from '@/libs/Prisma';
 import { NextResponse } from 'next/server';
 
 // ดึงข้อมูลคูปองตาม ID
